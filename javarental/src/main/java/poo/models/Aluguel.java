@@ -1,0 +1,25 @@
+package poo.models;
+
+import java.util.Date;
+import java.util.List;
+
+public class Aluguel {
+    private long id;
+    private List<Veiculo> listaVeiculos;
+    private Usuario locatario;
+    private double precoTotal;
+    // TODO change date or not?
+    private Date dataLocacao;
+    private Date dataDevolucao;
+
+    public Aluguel() {
+    }
+
+    public int periodoAluguel(Date inicio, Date fim) {
+       return 0; 
+    }
+
+    public double precoFinal(double precoVeiculo, int periodo) {
+       return 0; 
+    }
+}
