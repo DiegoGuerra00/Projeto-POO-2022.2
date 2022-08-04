@@ -2,8 +2,12 @@ package poo.models;
 
 import java.util.Date;
 import java.util.List;
+import jakarta.persistence.*;
 
+@Entity
 public class Aluguel {
+   @Id
+   @GeneratedValue
     private long id;
     private List<Veiculo> listaVeiculos;
     private Usuario locatario;
