@@ -1,18 +1,65 @@
 package poo.models;
 
-import java.util.HashMap;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 
 public class Auth {
-    private HashMap<Long, Usuario> usuarios;
-
-    public void login(String nomeUsuario, String senha) {
-
+    public Auth() {
     }
 
-    public void criarConta(String nome, String sobrenome, String nomeUsuario, String senha, int cpf,
-            Endereco endereco) {
-
+    // talves seja necessario retornar o usuario atual no caso de sucesso
+    public boolean login(String nomeUsuario, String senha) {
+        if (nomeUsuario == null || senha == null) {
+            // TODO throw login exception here
+            return false;
+        }
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+        Usuario user;
+        try {
+            String queryText = "FROM Usuario WHERE nomeUsuario = :username AND senha = :passwd";
+            Query query = em.createQuery(queryText);
+            query.setParameter("username", nomeUsuario);
+            query.setParameter("passwd", senha);
+            user = (Usuario) query.getSingleResult();
+            System.out.println(user.toString());
+            return true;
+        } catch (NoResultException e) {
+            // TODO throw exception here
+            System.out.println("No Result found!");
+            return false;
+        } finally {
+            em.close();
+        }
     }
 
-    public void logout() {}
+    // talvez retornar um boolean de confirmação
+    public void criarConta(Usuario user) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            String queryText = "FROM Usuario WHERE cpf = :cpf";
+            Query query = em.createQuery(queryText);
+            query.setParameter("cpf", user.getCpf());
+            query.getSingleResult();
+        } catch (NoResultException e) {
+            System.out.println("Usuario Adicionado!");
+            em.getTransaction().begin();
+            em.persist(user);
+            em.getTransaction().commit();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        finally {
+            em.close();
+        }
+    }
+
+    public void logout() {
+    }
 }

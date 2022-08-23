@@ -10,7 +10,7 @@ import jakarta.persistence.Id;
 public abstract class Veiculo {
     @Id
     @GeneratedValue
-    protected long id;
+    protected long id; // talvez trocar por placa
     protected String marca;
     protected String modelo;
     protected int ano;
@@ -22,7 +22,7 @@ public abstract class Veiculo {
     protected int quilometragem;
     protected double precoDiario;
     // TODO Trocar para java.fx
-    protected ImageIcon icon;
+    // protected ImageIcon icon;
 
     public abstract void cadatroVeiculo();
 }

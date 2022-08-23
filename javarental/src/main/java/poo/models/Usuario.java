@@ -4,16 +4,24 @@ import java.util.List;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.Persistence;
 
 @Entity
 public class Usuario {
+    @Override
+    public String toString() {
+        return "Usuario [id=" + id + ", nome=" + nome + ", nomeUsuario=" + nomeUsuario + ", senha=" + senha + "]";
+    }
+
     @Id
     @GeneratedValue
-    private long id;
+    private long id; //talvez remover e manter cpf como PK
     private String nome;
     private String sobrenome;
     private String nomeUsuario;
@@ -21,7 +29,6 @@ public class Usuario {
     private int cpf;
     private String email;
     @OneToOne(cascade = CascadeType.ALL)
-    private Endereco endereco;
     @OneToMany
     private List<Aluguel> alugueis;
 
@@ -29,10 +36,6 @@ public class Usuario {
     }
 
     public void efetuarAluguel() {
-
-    }
-
-    public void cadastrarEndereco() {
 
     }
 
@@ -64,11 +67,39 @@ public class Usuario {
         this.email = email;
     }
 
-    public void setEndereco(Endereco endereco) {
-        this.endereco = endereco;
-    }
-
     public void setAlugueis(List<Aluguel> alugueis) {
         this.alugueis = alugueis;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getSobrenome() {
+        return sobrenome;
+    }
+
+    public String getNomeUsuario() {
+        return nomeUsuario;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public int getCpf() {
+        return cpf;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public List<Aluguel> getAlugueis() {
+        return alugueis;
     }
 }

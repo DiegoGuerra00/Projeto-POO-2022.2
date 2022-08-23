@@ -9,7 +9,7 @@ public class Aluguel {
    @Id
    @GeneratedValue
    private long id;
-   @OneToMany //TODO check this relation
+   @OneToOne //TODO check this relation
    private List<Veiculo> listaVeiculos;
    @OneToOne
    private Usuario locatario;
@@ -26,6 +26,6 @@ public class Aluguel {
    }
 
    public double precoFinal(double precoVeiculo, int periodo) {
-      return 0;
+      return precoVeiculo * periodo;
    }
 }
