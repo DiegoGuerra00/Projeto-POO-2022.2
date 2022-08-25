@@ -12,29 +12,29 @@ public class Aluguel {
    @GeneratedValue
    private long id;
    // TODO Lista de carros e motos nao funcionava, com 1 carro funciona
-   // @OneToOne(cascade = CascadeType.ALL, targetEntity = Carro.class)
-   // private List<Carro> listaCarros;
-   // @OneToOne(cascade = CascadeType.ALL, targetEntity = Motocicleta.class)
-   // private List<Motocicleta> listaMotos;
-   @OneToOne(cascade = CascadeType.ALL)
-   private Carro carro;
-   @OneToOne(cascade = CascadeType.ALL) // TODO talez ManyToOne?
+   @OneToOne(cascade = CascadeType.ALL, targetEntity = Carro.class)
+   private List<Carro> listaCarros;
+   @OneToOne(cascade = CascadeType.ALL, targetEntity = Motocicleta.class)
+   private List<Motocicleta> listaMotos;
+   // @OneToOne(cascade = CascadeType.ALL)
+   // private Carro carro;
+   @ManyToOne(cascade = CascadeType.ALL) 
    @JoinColumn(name = "usuario")
    private Usuario locatario;
    private Date dataLocacao;
    private Date dataDevolucao;
 
-   public Aluguel(Carro carro, Usuario locatario, Date dataLocacao, Date dataDevolucao) {
-      this.carro = carro;
-      this.locatario = locatario;
-      this.dataLocacao = dataLocacao;
-      this.dataDevolucao = dataDevolucao;
-   }
+   // public Aluguel(Carro carro, Usuario locatario, Date dataLocacao, Date dataDevolucao) {
+   //    this.carro = carro;
+   //    this.locatario = locatario;
+   //    this.dataLocacao = dataLocacao;
+   //    this.dataDevolucao = dataDevolucao;
+   // }
 
    public Aluguel(List<Carro> listaCarros, List<Motocicleta> listaMotos, Usuario locatario, Date dataLocacao,
          Date dataDevolucao) {
-      // this.listaCarros = listaCarros;
-      // this.listaMotos = listaMotos;
+      this.listaCarros = listaCarros;
+      this.listaMotos = listaMotos;
       this.locatario = locatario;
       this.dataLocacao = dataLocacao;
       this.dataDevolucao = dataDevolucao;
@@ -97,9 +97,9 @@ public class Aluguel {
       this.dataDevolucao = dataDevolucao;
    }
 
-   @Override
-   public String toString() {
-      return "Aluguel [carro=" + carro + ", dataDevolucao=" + dataDevolucao + ", dataLocacao=" + dataLocacao + ", id="
-            + id + ", locatario=" + locatario + "]";
-   }
+   // @Override
+   // public String toString() {
+   //    return "Aluguel [carro=" + carro + ", dataDevolucao=" + dataDevolucao + ", dataLocacao=" + dataLocacao + ", id="
+   //          + id + ", locatario=" + locatario + "]";
+   // }
 }

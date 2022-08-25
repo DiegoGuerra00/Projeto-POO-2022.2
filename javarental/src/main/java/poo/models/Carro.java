@@ -12,4 +12,20 @@ public class Carro extends Veiculo {
     public void cadatroVeiculo() {
     }
 
+    public String getTipoCarro() {
+        return tipoCarro;
+    }
+
+    public void setTipoCarro(String tipoCarro) {
+        this.tipoCarro = tipoCarro;
+    }
+
+    public boolean isDuasPortas() {
+        return isDuasPortas;
+    }
+
+    public void setDuasPortas(boolean isDuasPortas) {
+        this.isDuasPortas = isDuasPortas;
+    }
+
 }

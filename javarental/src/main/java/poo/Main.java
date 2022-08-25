@@ -21,8 +21,6 @@ public class Main {
         user.setNome("User");
         user.setSenha("senha");
         user.setCpf(123);
-
-        
         
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
@@ -34,19 +32,22 @@ public class Main {
         // em.persist(user);
         // em.getTransaction().commit();
 
-        Carro carros = new Carro(); 
-        carros.setAno(1999);
-        carros.setCor("Vermelho");
-        Motocicleta motos = new Motocicleta();
+        List<Carro> carros = new ArrayList<Carro>(); 
+        Carro car = new Carro();
+        car.setAno(1234);
+        car.setCor("cor");
+        carros.add(car);
+        // carros.setAno(1999);
+        // carros.setCor("Vermelho");
+        List<Motocicleta> motos = new ArrayList<Motocicleta>();
         Date inicio = new Date();
         Date fim  = new Date();
 
         user.efetuarAluguel(carros, motos, user, inicio, fim);
-        List<Aluguel> alugueis =  user.getUserAluguel(1); // FIXME Retornar apenas 1 funciona, com a lista da NullPointer
-        // No postgre mostra o aluguel certo
-        System.out.println(alugueis.toString());
+        // List<Aluguel> alugueis =  user.getUserAluguel(1); 
+        // System.out.println(alugueis.toString());
         
-        Auth auth = new Auth();
+        // Auth auth = new Auth();
         // auth.login("user_1", "senha");
         // auth.login("user_2", "outra_senha");
     

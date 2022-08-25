@@ -30,8 +30,6 @@ public class Usuario {
     private String senha;
     private int cpf;
     private String email;
-    @OneToOne(cascade = CascadeType.ALL, targetEntity = Aluguel.class)
-    private List<Aluguel> alugueis; // TODO talvez desnecessario
 
     public Usuario() {
     }
@@ -67,33 +65,31 @@ public class Usuario {
             Query query = em.createQuery(queryText);
             query.setParameter("userID", userID);
 
-            return (List<Aluguel>) query.getSingleResult();
-
+            return (List<Aluguel>) query.getResultList();
         } catch (NoResultException e) {
             return null;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        } 
-        finally {
+        } finally {
             em.close();
         }
     }
 
-    public void efetuarAluguel(Carro listaCarros, Motocicleta listaMotos, Usuario usuario, Date inicio, Date fim) {
-        Aluguel aluguel = new Aluguel(listaCarros, usuario, inicio, fim);
+    // public void efetuarAluguel(Carro listaCarros, Motocicleta listaMotos, Usuario usuario, Date inicio, Date fim) {
+    //     Aluguel aluguel = new Aluguel(listaCarros, usuario, inicio, fim);
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-        EntityManager em = emf.createEntityManager();
+    //     EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+    //     EntityManager em = emf.createEntityManager();
 
-        try {
-            em.getTransaction().begin();
-            em.persist(aluguel);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    //     try {
+    //         em.getTransaction().begin();
+    //         em.persist(aluguel);
+    //         em.getTransaction().commit();
+    //     } catch (Exception e) {
+    //         e.printStackTrace();
+    //     }
+    // }
 
     public void setId(long id) {
         this.id = id;
@@ -121,10 +117,6 @@ public class Usuario {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public void setAlugueis(List<Aluguel> alugueis) {
-        this.alugueis = alugueis;
     }
 
     public long getId() {
@@ -155,7 +147,4 @@ public class Usuario {
         return email;
     }
 
-    public List<Aluguel> getAlugueis() {
-        return alugueis;
-    }
 }
