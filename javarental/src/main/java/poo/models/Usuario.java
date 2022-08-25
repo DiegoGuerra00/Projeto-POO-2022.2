@@ -1,5 +1,6 @@
 package poo.models;
 
+import java.util.Date;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
@@ -8,9 +9,10 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Persistence;
+import jakarta.persistence.Query;
 
 @Entity
 public class Usuario {
@@ -21,22 +23,76 @@ public class Usuario {
 
     @Id
     @GeneratedValue
-    private long id; //talvez remover e manter cpf como PK
+    private long id; // talvez remover e manter cpf como PK
     private String nome;
     private String sobrenome;
     private String nomeUsuario;
     private String senha;
     private int cpf;
     private String email;
-    @OneToOne(cascade = CascadeType.ALL)
-    @OneToMany
-    private List<Aluguel> alugueis;
+    @OneToOne(cascade = CascadeType.ALL, targetEntity = Aluguel.class)
+    private List<Aluguel> alugueis; // TODO talvez desnecessario
 
     public Usuario() {
     }
 
-    public void efetuarAluguel() {
+    public void efetuarAluguel(List<Carro> listaCarros, List<Motocicleta> listaMotos, Usuario usuario, Date inicio,
+            Date fim) {
+        Aluguel aluguel = new Aluguel(listaCarros, listaMotos, usuario, inicio, fim);
 
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            em.persist(aluguel);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Retorna os alugueis correpondentes a um usuário, baseado no seu ID
+     * 
+     * @param userID ID do usuário a ser consultado
+     * @return Lista de Aluguel caso exista no DB, null caso não exista
+     */
+    public List<Aluguel> getUserAluguel(long userID) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            String queryText = "FROM Aluguel WHERE id = :userID";
+            Query query = em.createQuery(queryText);
+            query.setParameter("userID", userID);
+
+            return (List<Aluguel>) query.getSingleResult();
+
+        } catch (NoResultException e) {
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } 
+        finally {
+            em.close();
+        }
+    }
+
+    public void efetuarAluguel(Carro listaCarros, Motocicleta listaMotos, Usuario usuario, Date inicio, Date fim) {
+        Aluguel aluguel = new Aluguel(listaCarros, usuario, inicio, fim);
+
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+
+        try {
+            em.getTransaction().begin();
+            em.persist(aluguel);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void setId(long id) {
