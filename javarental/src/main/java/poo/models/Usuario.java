@@ -13,8 +13,11 @@ import jakarta.persistence.NoResultException;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.GenerationType;
 
 @Entity
+@SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_seq", allocationSize = 1, initialValue = 1)
 public class Usuario {
     @Override
     public String toString() {
@@ -22,8 +25,9 @@ public class Usuario {
     }
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
     private long id; // talvez remover e manter cpf como PK
+
     private String nome;
     private String sobrenome;
     private String nomeUsuario;
@@ -48,6 +52,9 @@ public class Usuario {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        em.close();
+        emf.close();
     }
 
     /**

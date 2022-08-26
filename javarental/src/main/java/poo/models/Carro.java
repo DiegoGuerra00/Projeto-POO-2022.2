@@ -8,6 +8,9 @@ public class Carro extends Veiculo {
     private String tipoCarro;
     private boolean isDuasPortas;
 
+    public Carro() {
+    }
+
     @Override
     public void cadatroVeiculo() {
     }

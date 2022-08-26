@@ -1,5 +1,6 @@
 package poo.models;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -7,19 +8,24 @@ import java.util.concurrent.TimeUnit;
 import jakarta.persistence.*;
 
 @Entity
+@SequenceGenerator(name = "aluguel_seq", sequenceName = "aluguel_seq", allocationSize = 1, initialValue = 1)
 public class Aluguel {
    @Id
-   @GeneratedValue
+   @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "aluguel_seq")
    private long id;
-   // TODO Lista de carros e motos nao funcionava, com 1 carro funciona
-   @OneToOne(cascade = CascadeType.ALL, targetEntity = Carro.class)
+
+   @OneToMany(cascade = CascadeType.ALL, targetEntity = Carro.class)
+   @JoinColumn(name = "id")
    private List<Carro> listaCarros;
-   @OneToOne(cascade = CascadeType.ALL, targetEntity = Motocicleta.class)
+
+   @OneToMany(cascade = CascadeType.ALL, targetEntity = Motocicleta.class)
+   @JoinColumn(name = "id")
    private List<Motocicleta> listaMotos;
+
    // @OneToOne(cascade = CascadeType.ALL)
    // private Carro carro;
-   @ManyToOne(cascade = CascadeType.ALL) 
-   @JoinColumn(name = "usuario")
+   //@ManyToOne(cascade = CascadeType.ALL) 
+   //@JoinColumn(name = "usuario")
    private Usuario locatario;
    private Date dataLocacao;
    private Date dataDevolucao;
@@ -33,6 +39,7 @@ public class Aluguel {
 
    public Aluguel(List<Carro> listaCarros, List<Motocicleta> listaMotos, Usuario locatario, Date dataLocacao,
          Date dataDevolucao) {
+      this();
       this.listaCarros = listaCarros;
       this.listaMotos = listaMotos;
       this.locatario = locatario;

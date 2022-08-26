@@ -8,6 +8,9 @@ public class Motocicleta extends Veiculo {
     private int cilindradas;
     private String tipoMoto;
 
+    public Motocicleta() {
+    }
+
     @Override
     public void cadatroVeiculo() {
     }

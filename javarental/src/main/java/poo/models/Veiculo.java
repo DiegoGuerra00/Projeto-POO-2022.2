@@ -3,11 +3,14 @@ package poo.models;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.GenerationType;
 
 @MappedSuperclass
+@SequenceGenerator(name = "veiculo_seq", sequenceName = "veiculo_seq", allocationSize = 1, initialValue = 1)
 public abstract class Veiculo {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "veiculo_seq")
     protected long id; // talvez trocar por placa
     protected String marca;
     protected String modelo;
@@ -20,6 +23,9 @@ public abstract class Veiculo {
     protected int quilometragem;
     protected double precoDiario;
     // protected ImageIcon icon;
+
+    public Veiculo() {
+    }
 
     public abstract void cadatroVeiculo();
 

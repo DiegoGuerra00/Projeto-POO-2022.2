@@ -22,24 +22,28 @@ public class Main {
         user.setSenha("senha");
         user.setCpf(123);
         
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-        EntityManager em = emf.createEntityManager();
+        //EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        //EntityManager em = emf.createEntityManager();
         
         // Usuario test = em.find(Usuario.class, 1);
         // System.out.println(test.toString());
-        
-        // em.getTransaction().begin();
-        // em.persist(user);
-        // em.getTransaction().commit();
 
-        List<Carro> carros = new ArrayList<Carro>(); 
+        List<Carro> carros = new ArrayList<Carro>();
+    
         Carro car = new Carro();
         car.setAno(1234);
-        car.setCor("cor");
+        car.setCor("azul");
+
         carros.add(car);
-        // carros.setAno(1999);
-        // carros.setCor("Vermelho");
+
         List<Motocicleta> motos = new ArrayList<Motocicleta>();
+
+        Motocicleta moto = new Motocicleta();
+        moto.setAno(2005);
+        moto.setCor("vermelha");
+
+        motos.add(moto);
+
         Date inicio = new Date();
         Date fim  = new Date();
 
@@ -52,5 +56,6 @@ public class Main {
         // auth.login("user_2", "outra_senha");
     
         em.close();
+        emf.close();
     }
 }
