@@ -36,6 +36,7 @@ public class Auth {
     }
 
 
+    // TODO remover, ja que sera necessario o scene da gui
     public void logout() {
     }
 }
