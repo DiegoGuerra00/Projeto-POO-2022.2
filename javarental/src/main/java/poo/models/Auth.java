@@ -10,10 +10,11 @@ public class Auth {
     public Auth() {
     }
 
-    // talves seja necessario retornar o usuario atual no caso de sucesso
-    public boolean login(String nomeUsuario, String senha) {
+    // talvez seja necessario retornar o usuario atual no caso de sucesso
+    public Usuario login(String nomeUsuario, String senha) {
         if (nomeUsuario == null || senha == null) {
-            return false;
+            return null;
+            //adicionar exceção
         }
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
@@ -25,10 +26,10 @@ public class Auth {
             query.setParameter("passwd", senha);
             user = (Usuario) query.getSingleResult();
             System.out.println(user.toString());
-            return true;
+            return user;
         } catch (NoResultException e) {
             System.out.println("No Result found!");
-            return false;
+            return null;
         } finally {
             em.close();
         }

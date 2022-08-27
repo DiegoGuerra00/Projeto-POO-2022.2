@@ -14,18 +14,18 @@ public class Aluguel {
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "aluguel_seq")
    private long id;
 
-   @OneToMany(cascade = CascadeType.ALL, targetEntity = Carro.class)
-   @JoinColumn(name = "id")
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Carro.class)
+   @JoinColumn(name = "aluguel_id")
    private List<Carro> listaCarros;
 
-   @OneToMany(cascade = CascadeType.ALL, targetEntity = Motocicleta.class)
-   @JoinColumn(name = "id")
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Motocicleta.class)
+   @JoinColumn(name = "aluguel_id")
    private List<Motocicleta> listaMotos;
 
    // @OneToOne(cascade = CascadeType.ALL)
    // private Carro carro;
-   //@ManyToOne(cascade = CascadeType.ALL) 
-   //@JoinColumn(name = "usuario")
+   @ManyToOne(cascade = CascadeType.ALL) 
+   @JoinColumn(name = "usuario_id")
    private Usuario locatario;
    private Date dataLocacao;
    private Date dataDevolucao;

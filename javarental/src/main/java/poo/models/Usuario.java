@@ -3,6 +3,8 @@ package poo.models;
 import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Session;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
@@ -45,7 +47,7 @@ public class Usuario {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
 
-        try {
+        try{
             em.getTransaction().begin();
             em.persist(aluguel);
             em.getTransaction().commit();
