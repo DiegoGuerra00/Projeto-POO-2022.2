@@ -49,11 +49,13 @@ public class Login {
                 // auth.login(userTextfield.getText(), passwdTextfield.getText());
                 // Usuario tmp = auth.login(usernameTextField.getText(), passwdTextfield.getText());
                 // if (tmp != null) {
-                    MainMenu menu = new MainMenu();
+                    // MainMenu menu = new MainMenu();
+                    // SearchScreen search = new SearchScreen();
+                    CategorySelection category = new CategorySelection();
                     Window w = scene.getWindow();
                     if (w instanceof Stage) {
                         Stage s = (Stage) w;
-                        s.setScene(menu.getScene());
+                        s.setScene(category.getScene());
                     }
                 // } else {
                 //     // TODO show error screen

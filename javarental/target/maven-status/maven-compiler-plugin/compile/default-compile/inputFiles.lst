@@ -1,8 +1,10 @@
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/models/Veiculo.java
+/home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/gui/SearchScreen.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/Main.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/gui/MainMenu.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/models/Motocicleta.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/gui/Login.java
+/home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/gui/CategorySelection.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/localdao/localdao.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/models/Aluguel.java
 /home/diego/Documents/ufabc/2022-2/poo/Projeto-POO-2022.2/javarental/src/main/java/poo/models/Carro.java

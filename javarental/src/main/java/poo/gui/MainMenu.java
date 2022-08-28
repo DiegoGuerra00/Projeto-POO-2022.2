@@ -3,11 +3,16 @@ package poo.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Tooltip;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -17,36 +22,34 @@ import javafx.stage.Window;
 import poo.models.Carro;
 
 public class MainMenu {
-    private AnchorPane anchor;
+    private GridPane grid;
     private Scene scene;
     private Button logoutButton;
     private Text title;
     private List<Carro> carros = new ArrayList<Carro>();
+    private ChoiceBox cb;
 
     public Scene getScene() {
         return scene;
     }
 
-    public AnchorPane getAnchor() {
-        return anchor;
-    }
-
     public MainMenu() {
         title = new Text("Main Menu");
 
-        anchor = new AnchorPane();
-        anchor.getChildren().add(title);
+        grid = new GridPane();
+        // grid.getChildren().add(title);
 
         setLogoutButton();
         getCarList();
         buildScreen();
+        selectionTest();
 
-        scene = new Scene(anchor, 1200, 900);
+        scene = new Scene(grid, 1200, 900);
     }
 
     private void setLogoutButton() {
         logoutButton = new Button("Teste");
-        anchor.getChildren().add(logoutButton);
+        grid.getChildren().add(logoutButton);
 
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -76,12 +79,26 @@ public class MainMenu {
 
 
         stack.getChildren().addAll(box, model, marca);
-        anchor.getChildren().add(stack);
+        grid.add(stack, 1, 1);
         // for (Carro carro : carros) {
         //     model.setText(carro.getModelo());
         //     stack.getChildren().addAll(box, model);
         //     anchor.getChildren().add(stack);
         // }
+    }
+
+    private void selectionTest() {
+        cb = new ChoiceBox<>(FXCollections.observableArrayList("Opcao 1", "Opcao 2", "Opcao 3")); 
+        cb.setTooltip(new Tooltip("Opcoes"));
+        cb.setValue("Teste");
+         final String[] opcoes = new String[] {"Opcao 1", "Opcao 2", "Opcao 3"};
+        cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue observable, Number oldValue, Number newValue) {
+                
+            }
+        });
+        grid.add(cb, 2, 1);
     }
 
     private void getCarList() {
