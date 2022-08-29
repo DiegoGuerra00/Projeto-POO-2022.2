@@ -2,6 +2,7 @@ package poo.gui;
 
 import javafx.beans.value.ObservableValue;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -24,6 +25,7 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import poo.models.Carro;
+import poo.models.Motocicleta;
 
 public class SearchScreen {
     private static final double WIDTH = 150;
@@ -39,7 +41,9 @@ public class SearchScreen {
     private ChoiceBox<String> assentosBox;
     private ChoiceBox<String> categoriaBox;
     private ChoiceBox<String> tipoCarroBox; // Usado apenas quando a categoria é carro
+    private ChoiceBox<String> tipoMotoBox;//Usado apenas quando é moto
     private ChoiceBox<String> portasBox; // Usado apenas quando a categoria é carro
+    private ChoiceBox<String> cilindradasBox; //Usado apenas quando é moto
 
     private String marca;
     private String modelo;
@@ -67,39 +71,27 @@ public class SearchScreen {
         return scene;
     }
 
-    // TODO remover
-    private void getValues() {
-        System.out.println(categoriaBox.getValue());
-        System.out.println(marcaBox.getValue());
-    }
-
     private void setChoiceBoxes() {
-        String[] categorias = new String[] { "Carro", "Motocicleta" };
-        categoriaBox = new ChoiceBox<String>(FXCollections.observableArrayList("Carro", "Motocicleta"));
-        categoriaBox.setValue("Categoria");
-        categoriaBox.setPrefWidth(WIDTH);
+        tipoCarroBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
+        tipoCarroBox.setValue("Tipo");
+        tipoCarroBox.setPrefWidth(WIDTH);
 
-        categoriaBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue observable, Number oldValue, Number newValue) {
-                categoria = categorias[newValue.intValue()];
-                System.out.println(categoria);
-            }
-        });
+        tipoMotoBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
+        tipoMotoBox.setValue("Tipo");
+        tipoMotoBox.setPrefWidth(WIDTH);
+        grid.add(tipoMotoBox, 1, 1);
 
-        grid.add(categoriaBox, 1, 1);
+        grid.add(tipoCarroBox, 1, 1);
+        tipoCarroBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
+        tipoCarroBox.setValue("Tipo");
+        tipoCarroBox.setPrefWidth(WIDTH);
+        grid.add(tipoCarroBox, 1, 1);
 
         marcaBox = new ChoiceBox<String>(FXCollections.observableArrayList("Honda", "BMW", "Nissan"));
         marcaBox.setValue("Marca");
         marcaBox.setPrefWidth(WIDTH);
         grid.add(marcaBox, 2, 1);
 
-        // FIXME vai dar problema com a selecao da marca, muito trabalho mapear marca e
-        // modelo juntos
-        modeloBox = new ChoiceBox<String>(FXCollections.observableArrayList("Civic", "328i Touring", "180SX"));
-        modeloBox.setValue("Modelo");
-        modeloBox.setPrefWidth(WIDTH);
-        grid.add(modeloBox, 3, 1);
 
         anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("1999", "1998", "1995"));
         anoBox.setValue("Ano");
@@ -112,21 +104,32 @@ public class SearchScreen {
         grid.add(corBox, 1, 2);
 
         assentosBox = new ChoiceBox<String>(FXCollections.observableArrayList("4", "5"));
-        assentosBox.setValue("Assentos"); // TODO caso categoria = moto deixar fixo em 2
+        assentosBox.setValue("Assentos"); 
         assentosBox.setPrefWidth(WIDTH);
         grid.add(assentosBox, 2, 2);
 
         portasBox = new ChoiceBox<String>(FXCollections.observableArrayList("2", "4"));
-        portasBox.setValue("Portas"); // TODO Só deve ser visivel quando categoria foi carro
+        portasBox.setValue("Portas"); 
         portasBox.setPrefWidth(WIDTH);
+        grid.add(portasBox, 3, 1);
+
+        cilindradasBox = new ChoiceBox<String>(FXCollections.observableArrayList("100", "150", "200"));
+        cilindradasBox.setValue("Cilindradas"); 
+        cilindradasBox.setPrefWidth(WIDTH);
+        grid.add(cilindradasBox, 3, 1);
 
         if (isCarro) {
             portasBox.setVisible(true);
+            tipoCarroBox.setVisible(true);
+            tipoMotoBox.setVisible(false);
+            cilindradasBox.setVisible(false);
         } else {
             portasBox.setVisible(false);
+            tipoCarroBox.setVisible(false);
+            tipoMotoBox.setVisible(true);
+            cilindradasBox.setVisible(true);
         }
 
-        grid.add(portasBox, 3, 2);
     }
 
     private void setButtons() {
@@ -159,43 +162,61 @@ public class SearchScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                getValues();
+                ResultsScreen results;
+                if (isCarro) {
+                    results = new ResultsScreen(new ArrayList<>(), new Carro()); // TODO executeQuery aqui
+                } else {
+                    results = new ResultsScreen(new ArrayList<>());
+                }
+                Window w = scene.getWindow();
+                if (w instanceof Stage) {
+                    Stage s = (Stage) w;
+                    s.setScene(results.getScene());
+                }
             }
 
         });
     }
 
-    public void executeQuery(String marca, String modelo, String ano, String cor, String assentos, String categoria) {
+    public List executeQuery(String marca, String modelo, String ano, String cor, String assentos, String categoria) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
 
-        if (isCarro) {
-            String queryText = "FROM carro WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
-            try {
-                Query query = em.createQuery(queryText);
-                query.setParameter(modelo, modelo);
-                query.setParameter(cor, cor);
-                query.setParameter(ano, ano);
-                query.setParameter(marca, marca);
-                query.setParameter(assentos, assentos);
+        String queryText = "FROM carro WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
+        try {
+            Query query = em.createQuery(queryText);
+            query.setParameter(modelo, modelo);
+            query.setParameter(cor, cor);
+            query.setParameter(ano, ano);
+            query.setParameter(marca, marca);
+            query.setParameter(assentos, assentos);
 
-                List<Carro> carros = (List<Carro>) query.getResultList();
-            } catch (NoResultException e) {
+            List<Carro> carros = (List<Carro>) query.getResultList();
 
-            }
-        } else {
-            String queryText = "FROM motocicleta WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
-            try {
-                Query query = em.createQuery(queryText);
-                query.setParameter(modelo, modelo);
-                query.setParameter(cor, cor);
-                query.setParameter(ano, ano);
-                query.setParameter(marca, marca);
-                query.setParameter(assentos, assentos);
-            } catch (NoResultException e) {
-
-            }
+            return carros;
+        } catch (NoResultException e) {
+            return null;
         }
 
+    }
+
+    public List executeQuery(String marca, String modelo, String ano, String cor, String categoria) {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+
+        String queryText = "FROM motocicleta WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND isdisponivel = true";
+        try {
+            Query query = em.createQuery(queryText);
+            query.setParameter(modelo, modelo);
+            query.setParameter(cor, cor);
+            query.setParameter(ano, ano);
+            query.setParameter(marca, marca);
+
+            List<Motocicleta> motos = (List<Motocicleta>) query.getResultList();
+
+            return motos;
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 }

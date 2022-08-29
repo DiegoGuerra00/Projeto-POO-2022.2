@@ -1,12 +1,18 @@
 package poo.gui;
 
+import java.io.InputStream;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -19,8 +25,11 @@ public class Login {
     private Scene scene;
     private Text title;
     private Button loginButton;
+    private Button registerButton;
     private TextField usernameTextField;
     private TextField passwdTextfield;
+    private Image logo;
+    private ImageView iv;
 
     public Login() {
         title = new Text("Bem Vindo");
@@ -30,35 +39,64 @@ public class Login {
         grid.setHgap(5);
         grid.setVgap(5);
         grid.setPadding(new Insets(10, 10, 10, 10));
-        grid.add(title, 0, 0);
+        grid.add(title, 0, 1);
+
+        logo = new Image("file:javarental_logo.png", true);
+        iv = new ImageView(logo);
+        grid.add(iv, 0, 0);
 
         setTextfields();
-        setLoginButton();
+        setButtons();
 
         scene = new Scene(grid, 800, 600);
     }
 
-    private void setLoginButton() {
+    private void setButtons() {
         loginButton = new Button("Login");
-        grid.add(loginButton, 0, 7);
+        loginButton.setPrefWidth(100);
+
+        registerButton = new Button("Criar Conta");
+        registerButton.setPrefWidth(100);
+
+        grid.add(loginButton, 0, 8);
+        grid.add(registerButton, 0, 9);
+
+        ColumnConstraints col = new ColumnConstraints();
+        col.setHalignment(HPos.CENTER);
+        grid.getColumnConstraints().add(col);
+
+        registerButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                RegisterScreen register = new RegisterScreen();
+                Window w = scene.getWindow();
+                if (w instanceof Stage) {
+                    Stage s = (Stage) w;
+                    s.setScene(register.getScene());
+                }
+            }
+
+        });
 
         loginButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Auth auth = new Auth();
                 // auth.login(userTextfield.getText(), passwdTextfield.getText());
-                // Usuario tmp = auth.login(usernameTextField.getText(), passwdTextfield.getText());
+                // Usuario tmp = auth.login(usernameTextField.getText(),
+                // passwdTextfield.getText());
                 // if (tmp != null) {
-                    MainMenu menu = new MainMenu();
-                    // SearchScreen search = new SearchScreen();
-                    CategorySelection category = new CategorySelection();
-                    Window w = scene.getWindow();
-                    if (w instanceof Stage) {
-                        Stage s = (Stage) w;
-                        s.setScene(menu.getScene());
-                    }
+                // MainMenu menu = new MainMenu();
+                // SearchScreen search = new SearchScreen();
+                CategorySelection category = new CategorySelection();
+                Window w = scene.getWindow();
+                if (w instanceof Stage) {
+                    Stage s = (Stage) w;
+                    s.setScene(category.getScene());
+                }
                 // } else {
-                //     // TODO show error screen
+                // // TODO show error screen
                 // }
 
             }
@@ -69,11 +107,14 @@ public class Login {
         usernameTextField = new TextField();
         passwdTextfield = new TextField();
 
+        // usernameTextField.setPrefWidth(205);
+        // passwdTextfield.setPrefWidth(205);
+
         usernameTextField.setPromptText("Nome de Usuário");
         passwdTextfield.setPromptText("Senha");
 
-        grid.add(usernameTextField, 0, 3);
-        grid.add(passwdTextfield, 0, 5);
+        grid.add(usernameTextField, 0, 4);
+        grid.add(passwdTextfield, 0, 6);
     }
 
     public Scene getScene() {
