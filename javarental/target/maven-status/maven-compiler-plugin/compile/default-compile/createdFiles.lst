@@ -9,6 +9,7 @@ poo/gui/MainMenu$2.class
 poo/gui/SearchScreen$3.class
 poo/gui/CategorySelection$3.class
 poo/gui/SearchScreen.class
+poo/gui/MainMenu$3.class
 poo/models/Motocicleta.class
 poo/localdao/localdao.class
 poo/gui/SearchScreen$2.class

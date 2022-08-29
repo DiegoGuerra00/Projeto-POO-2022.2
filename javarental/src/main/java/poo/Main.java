@@ -20,12 +20,6 @@ import poo.models.Usuario;
 
 public class Main extends Application{
     public static void main(String[] args) {
-        // Login login = new Login();
-        // try {
-        //     login.launch(Login.class);
-        // } catch (Exception e) {
-        //     e.printStackTrace();
-        // }
         launch(args);
     }
 

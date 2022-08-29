@@ -1,6 +1,9 @@
 package poo.gui;
 
 import javafx.beans.value.ObservableValue;
+
+import java.util.List;
+
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
@@ -20,9 +23,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import poo.models.Carro;
 
 public class SearchScreen {
-    private static final double WIDTH = 250;
+    private static final double WIDTH = 150;
     private GridPane grid;
     private Scene scene;
     private Button logoutButton;
@@ -43,8 +47,10 @@ public class SearchScreen {
     private String cor;
     private String assentos;
     private String categoria;
+    private boolean isCarro;
 
-    public SearchScreen() {
+    public SearchScreen(boolean isCarro) {
+        this.isCarro = isCarro;
         grid = new GridPane();
         grid.setHgap(5);
         grid.setVgap(8);
@@ -54,7 +60,7 @@ public class SearchScreen {
         setButtons();
         setChoiceBoxes();
 
-        scene = new Scene(grid, 1200, 900);
+        scene = new Scene(grid, 800, 600);
     }
 
     public Scene getScene() {
@@ -114,8 +120,7 @@ public class SearchScreen {
         portasBox.setValue("Portas"); // TODO Só deve ser visivel quando categoria foi carro
         portasBox.setPrefWidth(WIDTH);
 
-        categoria = "";
-        if (categoria.matches("Carro")) {
+        if (isCarro) {
             portasBox.setVisible(true);
         } else {
             portasBox.setVisible(false);
@@ -127,7 +132,9 @@ public class SearchScreen {
     private void setButtons() {
         logoutButton = new Button("Logout");
         logoutButton.setStyle("-fx-background-color: #ff0000");
-        grid.add(logoutButton, 6, 0);
+        logoutButton.setTranslateX(50);
+        logoutButton.setTranslateY(-220);
+        grid.add(logoutButton, 5, 0);
 
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -144,7 +151,9 @@ public class SearchScreen {
         });
 
         searchButton = new Button("Buscar");
-        grid.add(searchButton, 6, 3);
+        searchButton.setTranslateX(50);
+        searchButton.setTranslateY(220);
+        grid.add(searchButton, 5, 3);
 
         searchButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -159,16 +168,34 @@ public class SearchScreen {
     public void executeQuery(String marca, String modelo, String ano, String cor, String assentos, String categoria) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
-        String queryText = "FROM :categoria WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
-        try {
-            Query query = em.createQuery(queryText);
-            query.setParameter(categoria, categoria);
-            query.setParameter(modelo, modelo);
-            query.setParameter(cor, cor);
-            query.setParameter(ano, ano);
-            query.setParameter(marca, marca);
-            query.setParameter(assentos, assentos);
-        } catch (NoResultException e) {
+
+        if (isCarro) {
+            String queryText = "FROM carro WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
+            try {
+                Query query = em.createQuery(queryText);
+                query.setParameter(modelo, modelo);
+                query.setParameter(cor, cor);
+                query.setParameter(ano, ano);
+                query.setParameter(marca, marca);
+                query.setParameter(assentos, assentos);
+
+                List<Carro> carros = (List<Carro>) query.getResultList();
+            } catch (NoResultException e) {
+
+            }
+        } else {
+            String queryText = "FROM motocicleta WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
+            try {
+                Query query = em.createQuery(queryText);
+                query.setParameter(modelo, modelo);
+                query.setParameter(cor, cor);
+                query.setParameter(ano, ano);
+                query.setParameter(marca, marca);
+                query.setParameter(assentos, assentos);
+            } catch (NoResultException e) {
+
+            }
         }
+
     }
 }

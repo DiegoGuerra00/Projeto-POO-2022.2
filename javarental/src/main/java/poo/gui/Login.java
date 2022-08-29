@@ -35,7 +35,7 @@ public class Login {
         setTextfields();
         setLoginButton();
 
-        scene = new Scene(grid, 1200, 900);
+        scene = new Scene(grid, 800, 600);
     }
 
     private void setLoginButton() {
@@ -49,13 +49,13 @@ public class Login {
                 // auth.login(userTextfield.getText(), passwdTextfield.getText());
                 // Usuario tmp = auth.login(usernameTextField.getText(), passwdTextfield.getText());
                 // if (tmp != null) {
-                    // MainMenu menu = new MainMenu();
+                    MainMenu menu = new MainMenu();
                     // SearchScreen search = new SearchScreen();
                     CategorySelection category = new CategorySelection();
                     Window w = scene.getWindow();
                     if (w instanceof Stage) {
                         Stage s = (Stage) w;
-                        s.setScene(category.getScene());
+                        s.setScene(menu.getScene());
                     }
                 // } else {
                 //     // TODO show error screen

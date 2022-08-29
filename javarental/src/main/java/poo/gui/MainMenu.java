@@ -1,33 +1,44 @@
 package poo.gui;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.hibernate.boot.jaxb.internal.stax.HbmEventReader;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Tooltip;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import poo.models.Aluguel;
 import poo.models.Carro;
 
 public class MainMenu {
-    private GridPane grid;
+    private HBox root;
     private Scene scene;
     private Button logoutButton;
     private Text title;
     private List<Carro> carros = new ArrayList<Carro>();
     private ChoiceBox cb;
+    Carro selecionado;
 
     public Scene getScene() {
         return scene;
@@ -36,20 +47,22 @@ public class MainMenu {
     public MainMenu() {
         title = new Text("Main Menu");
 
-        grid = new GridPane();
+        root = new HBox();
+        root.setAlignment(Pos.CENTER);
+        root.setSpacing(10);
         // grid.getChildren().add(title);
 
-        setLogoutButton();
+        // setLogoutButton();
         getCarList();
         buildScreen();
-        selectionTest();
+        // selectionTest();
 
-        scene = new Scene(grid, 1200, 900);
+        scene = new Scene(root, 1200, 900);
     }
 
     private void setLogoutButton() {
         logoutButton = new Button("Teste");
-        grid.getChildren().add(logoutButton);
+        root.getChildren().add(logoutButton);
 
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -68,38 +81,63 @@ public class MainMenu {
 
     // TODO find a way to set a card for each car on the list
     private void buildScreen() {
-        Rectangle box = new Rectangle();
-        box.setWidth(100);
-        box.setHeight(100);
-        box.setFill(Color.DARKGRAY);
-        StackPane stack = new StackPane();
-        Text model = new Text();
-        model.setText(carros.get(0).getModelo());
-        Text marca = new Text(carros.get(0).getMarca());
+        ListView<String> lv = new ListView<String>();
+        lv.setPrefHeight(10);
+        ObservableList<String> values = FXCollections.observableArrayList();
+        for (Carro carro : carros) {
+            StringBuilder str = new StringBuilder();
+            str.append(carro.getModelo() + " | " + carro.getPrecoDiario());
+            values.add(str.toString());
+        }
 
+        lv.setItems(values);
+        lv.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
-        stack.getChildren().addAll(box, model, marca);
-        grid.add(stack, 1, 1);
-        // for (Carro carro : carros) {
-        //     model.setText(carro.getModelo());
-        //     stack.getChildren().addAll(box, model);
-        //     anchor.getChildren().add(stack);
-        // }
-    }
-
-    private void selectionTest() {
-        cb = new ChoiceBox<>(FXCollections.observableArrayList("Opcao 1", "Opcao 2", "Opcao 3")); 
-        cb.setTooltip(new Tooltip("Opcoes"));
-        cb.setValue("Teste");
-         final String[] opcoes = new String[] {"Opcao 1", "Opcao 2", "Opcao 3"};
-        cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
-            public void changed(ObservableValue observable, Number oldValue, Number newValue) {
-                
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                System.out.println(carros.get(newValue.intValue()));
+                selecionado = carros.get(newValue.intValue());
             }
+
         });
-        grid.add(cb, 2, 1);
+
+        DatePicker inicio = new DatePicker(LocalDate.now());
+        DatePicker fim = new DatePicker();
+
+        Button getDates = new Button("Preço");
+        getDates.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                // System.out.println("inicio: " + inicio.getValue().toString());
+                // System.out.println("fim: " + fim.getValue().toString());
+
+            }
+
+        });
+
+        root.getChildren().add(lv);
+        root.getChildren().add(inicio);
+        root.getChildren().add(fim);
+        root.getChildren().add(getDates);
     }
+
+    // private void selectionTest() {
+    // cb = new ChoiceBox<>(FXCollections.observableArrayList("Opcao 1", "Opcao 2",
+    // "Opcao 3"));
+    // cb.setTooltip(new Tooltip("Opcoes"));
+    // cb.setValue("Teste");
+    // final String[] opcoes = new String[] { "Opcao 1", "Opcao 2", "Opcao 3" };
+    // cb.getSelectionModel().selectedIndexProperty().addListener(new
+    // ChangeListener<Number>() {
+    // @Override
+    // public void changed(ObservableValue observable, Number oldValue, Number
+    // newValue) {
+
+    // }
+    // });
+    // root.add(cb, 2, 1);
+    // }
 
     private void getCarList() {
         Carro car = new Carro();

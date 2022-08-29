@@ -31,7 +31,7 @@ public class CategorySelection {
 
         setButtons();
 
-        scene = new Scene(root, 1200, 900);
+        scene = new Scene(root, 800, 600);
     }
 
     public Scene getScene() {
@@ -46,14 +46,15 @@ public class CategorySelection {
         root.getChildren().add(bikeButton);
 
         logoutButton = new Button("Logout");
-        logoutButton.setTranslateX(100);
-        logoutButton.setTranslateY(100);
+        logoutButton.setStyle("-fx-background-color: #ff0000");
+        logoutButton.setTranslateX(315);
+        logoutButton.setTranslateY(-300);
         root.getChildren().add(logoutButton);
 
         carButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchScreen search = new SearchScreen();
+                SearchScreen search = new SearchScreen(true);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -65,7 +66,7 @@ public class CategorySelection {
         bikeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchScreen search = new SearchScreen();
+                SearchScreen search = new SearchScreen(false);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
