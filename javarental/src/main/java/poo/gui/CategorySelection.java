@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import poo.models.Usuario;
 
 public class CategorySelection {
     private VBox root;
@@ -23,8 +24,10 @@ public class CategorySelection {
     private Button logoutButton;
     private Image logo;
     private ImageView iv;
+    private Usuario user;
 
-    public CategorySelection() {
+    public CategorySelection(Usuario user) {
+        this.user = user;
         title = new Text("Deseja alugar um carro ou uma motocicleta?");
         title.setFont(new Font("Times New Roman", 16));
         root = new VBox();
@@ -63,7 +66,7 @@ public class CategorySelection {
         carButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchScreen search = new SearchScreen(true);
+                SearchScreen search = new SearchScreen(true, user);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -75,7 +78,7 @@ public class CategorySelection {
         bikeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchScreen search = new SearchScreen(false);
+                SearchScreen search = new SearchScreen(false, user);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;

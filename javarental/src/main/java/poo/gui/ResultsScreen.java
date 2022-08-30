@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import poo.models.Carro;
 import poo.models.Motocicleta;
+import poo.models.Usuario;
 
 public class ResultsScreen {
     private HBox root;
@@ -34,11 +35,13 @@ public class ResultsScreen {
     private List<Carro> carros;
     private List<Motocicleta> motos;
     private ObservableList<String> listViewItems;
+    private Usuario user;
 
     // FIXME parametro carro é gambiarra para diferenciar os construtores(devido ao
     // type erasure do Java)
-    public ResultsScreen(List<Carro> carros, Carro carro) {
+    public ResultsScreen(List<Carro> carros, Carro carro, Usuario user) {
         this.carros = carros;
+        this.user = user;
         root = new HBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(8);
@@ -54,7 +57,8 @@ public class ResultsScreen {
         scene = new Scene(root, 800, 600);
     }
 
-    public ResultsScreen(List<Motocicleta> motos) {
+    public ResultsScreen(List<Motocicleta> motos, Usuario user) {
+        this.user = user;
         this.motos = motos;
         root = new HBox();
         root.setAlignment(Pos.CENTER);
@@ -132,7 +136,12 @@ public class ResultsScreen {
             @Override
             public void handle(ActionEvent event) {
                 if (checkSelection(isCarro)) {
-                    ConfirmScreen confirmScreen = new ConfirmScreen();
+                    ConfirmScreen confirmScreen;
+                    if (isCarro) {
+                        confirmScreen = new ConfirmScreen(carroSelecionado, inicioDatePicker.getValue(), fimDatePicker.getValue(), user);
+                    } else {
+                        confirmScreen = new ConfirmScreen(motoSelecionada, inicioDatePicker.getValue(), fimDatePicker.getValue(), user);
+                    }
                     Window w = scene.getWindow();
                     if (w instanceof Stage) {
                         Stage s = (Stage) w;

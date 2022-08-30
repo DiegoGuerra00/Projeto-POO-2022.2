@@ -87,7 +87,7 @@ public class Login {
                 // if (tmp != null) {
                 // MainMenu menu = new MainMenu();
                 // SearchScreen search = new SearchScreen();
-                CategorySelection category = new CategorySelection();
+                CategorySelection category = new CategorySelection(new Usuario());
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;

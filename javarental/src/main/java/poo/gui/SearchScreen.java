@@ -28,6 +28,7 @@ import javafx.stage.Stage;
 import javafx.stage.Window;
 import poo.models.Carro;
 import poo.models.Motocicleta;
+import poo.models.Usuario;
 
 public class SearchScreen {
     private static final double WIDTH = 150;
@@ -37,6 +38,7 @@ public class SearchScreen {
     private Button searchButton;
     private Image logo;
     private ImageView iv;
+    private Usuario user;
 
     private ChoiceBox<String> marcaBox;
     private ChoiceBox<String> modeloBox;
@@ -57,7 +59,8 @@ public class SearchScreen {
     private String categoria;
     private boolean isCarro;
 
-    public SearchScreen(boolean isCarro) {
+    public SearchScreen(boolean isCarro, Usuario user) {
+        this.user = user;
         this.isCarro = isCarro;
         grid = new GridPane();
         grid.setHgap(5);
@@ -95,10 +98,10 @@ public class SearchScreen {
         tipoCarroBox.setPrefWidth(WIDTH);
         grid.add(tipoCarroBox, 1, 1);
 
-        marcaBox = new ChoiceBox<String>(FXCollections.observableArrayList("Honda", "BMW", "Nissan"));
-        marcaBox.setValue("Marca");
-        marcaBox.setPrefWidth(WIDTH);
-        grid.add(marcaBox, 2, 1);
+        modeloBox = new ChoiceBox<String>(FXCollections.observableArrayList("Honda", "BMW", "Nissan"));
+        modeloBox.setValue("Modelo");
+        modeloBox.setPrefWidth(WIDTH);
+        grid.add(modeloBox, 2, 1);
 
 
         anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("1999", "1998", "1995"));
@@ -172,9 +175,9 @@ public class SearchScreen {
             public void handle(ActionEvent event) {
                 ResultsScreen results;
                 if (isCarro) {
-                    results = new ResultsScreen(new ArrayList<>(), new Carro()); // TODO executeQuery aqui
+                    results = new ResultsScreen(new ArrayList<>(), new Carro(), user); // TODO executeQuery aqui
                 } else {
-                    results = new ResultsScreen(new ArrayList<>());
+                    results = new ResultsScreen(new ArrayList<>(), user);
                 }
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
