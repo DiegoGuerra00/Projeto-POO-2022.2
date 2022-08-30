@@ -127,8 +127,12 @@ public class ConfirmScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                carro.setDisponivel(false);
-                moto.setDisponivel(false);
+                if (carro != null) {
+                    carro.setDisponivel(false);
+                }
+                if (moto != null) {
+                    moto.setDisponivel(false);
+                }
                 user.efetuarAluguel(carro, moto, user, inicio, fim, em);
 
                 SucessScreen sucess = new SucessScreen(user, em);
