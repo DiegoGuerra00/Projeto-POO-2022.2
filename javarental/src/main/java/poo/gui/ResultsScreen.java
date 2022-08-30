@@ -85,7 +85,7 @@ public class ResultsScreen {
         listView = new ListView<>();
         listViewItems = FXCollections.observableArrayList();
 
-        hint = new Label("Selecione o moto desejada");
+        // hint = new Label("Selecione o moto desejada");
 
         getListViewItems(false);
         setDatePickers();
