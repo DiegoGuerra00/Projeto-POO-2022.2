@@ -25,6 +25,7 @@ poo/models/Aluguel.class
 poo/gui/SucessScreen$1.class
 poo/gui/Login.class
 poo/gui/MainMenu$2.class
+poo/gui/ResultsScreen$3.class
 poo/gui/SucessScreen.class
 poo/gui/SearchScreen$2.class
 poo/gui/ResultsScreen.class

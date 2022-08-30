@@ -28,7 +28,7 @@ public class CategorySelection {
 
     public CategorySelection(Usuario user) {
         this.user = user;
-        title = new Text("Deseja alugar um carro ou uma motocicleta?");
+        title = new Text("Deseja alugar um carro ou uma moto?");
         title.setFont(new Font("Times New Roman", 16));
         root = new VBox();
         root.setAlignment(Pos.CENTER);
@@ -51,10 +51,12 @@ public class CategorySelection {
     }
 
     private void setButtons() {
-        carButton = new Button("Alugar Carro");
+        carButton = new Button("Carro");
+        carButton.setPrefWidth(70);
         root.getChildren().add(carButton);
 
-        bikeButton = new Button("Alugar Motocicleta");
+        bikeButton = new Button("Moto");
+        bikeButton.setPrefWidth(70);
         root.getChildren().add(bikeButton);
 
         logoutButton = new Button("Logout");

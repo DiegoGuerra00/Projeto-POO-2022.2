@@ -10,12 +10,16 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import poo.models.Carro;
@@ -36,6 +40,8 @@ public class ResultsScreen {
     private List<Motocicleta> motos;
     private ObservableList<String> listViewItems;
     private Usuario user;
+    private Separator sep;
+    // private Label hint;
 
     // FIXME parametro carro é gambiarra para diferenciar os construtores(devido ao
     // type erasure do Java)
@@ -49,9 +55,20 @@ public class ResultsScreen {
         listView = new ListView<>();
         listViewItems = FXCollections.observableArrayList();
 
+        // hint = new Label("Selecione o carro desejado");
+        // // hint.setPrefWidth(800);
+        // hint.setTranslateX(200);
+        // hint.setTranslateY(-200);
+
         getListViewItems(true);
-        setListView(true);
         setDatePickers();
+
+        sep = new Separator(Orientation.HORIZONTAL);
+        sep.setPrefWidth(100);
+        sep.setVisible(false);
+        root.getChildren().add(sep);
+
+        setListView(true);
         setButtons(true);
 
         scene = new Scene(root, 800, 600);
@@ -68,9 +85,17 @@ public class ResultsScreen {
         listView = new ListView<>();
         listViewItems = FXCollections.observableArrayList();
 
+        hint = new Label("Selecione o moto desejada");
+
         getListViewItems(false);
-        setListView(false);
         setDatePickers();
+
+        sep = new Separator(Orientation.HORIZONTAL);
+        sep.setPrefWidth(100);
+        sep.setVisible(false);
+        root.getChildren().add(sep);
+
+        setListView(false);
         setButtons(false);
 
         scene = new Scene(root, 800, 600);
@@ -119,14 +144,14 @@ public class ResultsScreen {
         confirmButton = new Button("Confirmar");
         cancelButton = new Button("Voltar");
 
-        confirmButton.setPrefWidth(100);
-        cancelButton.setPrefWidth(100);
+        confirmButton.setPrefWidth(200);
+        cancelButton.setPrefWidth(200);
 
-        confirmButton.setTranslateX(-110);
-        confirmButton.setTranslateY(-230);
+        confirmButton.setTranslateX(-130);
+        confirmButton.setTranslateY(230);
 
-        cancelButton.setTranslateX(-320);
-        cancelButton.setTranslateY(-230);
+        cancelButton.setTranslateX(-390);
+        cancelButton.setTranslateY(230);
 
         root.getChildren().add(confirmButton);
         root.getChildren().add(cancelButton);
@@ -150,6 +175,14 @@ public class ResultsScreen {
                 }
             }
 
+        });
+
+        cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+            }
+            
         });
     }
 
