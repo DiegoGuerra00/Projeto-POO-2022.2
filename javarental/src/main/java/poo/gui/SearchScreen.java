@@ -20,6 +20,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -33,6 +35,8 @@ public class SearchScreen {
     private Scene scene;
     private Button logoutButton;
     private Button searchButton;
+    private Image logo;
+    private ImageView iv;
 
     private ChoiceBox<String> marcaBox;
     private ChoiceBox<String> modeloBox;
@@ -60,6 +64,10 @@ public class SearchScreen {
         grid.setVgap(8);
         grid.setPadding(new Insets(8, 8, 8, 8));
         grid.setAlignment(Pos.CENTER);
+
+        logo = new Image("/javarental_logo.png", 300, 300, true, false);
+        iv = new ImageView(logo);
+        // grid.add(iv, 1, 0);
 
         setButtons();
         setChoiceBoxes();

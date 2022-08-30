@@ -2,33 +2,41 @@ package poo.gui;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 
 public class ConfirmScreen {
-    private GridPane grid;
+    private HBox root;
     private Scene scene;
     private Button confirmButton;
     private Button logoutButton;
     private Button cancelButton;
     private Label priceLabel;
     private Image logo;
+    private ImageView iv;
 
     public ConfirmScreen() {
-        grid = new GridPane();
+        root = new HBox();
+        root.setAlignment(Pos.CENTER);
+        root.setSpacing(8);
 
-        logo = new Image("file:javarental_logo.png", true);
+        logo = new Image("/javarental_logo.png", 300, 300, true, false);
+        iv = new ImageView(logo);
+        root.getChildren().add(iv);
 
         // TODO set price
-        grid.add(priceLabel, 0, 1);
+        root.getChildren().add(priceLabel);
         setButtons();
 
-        scene = new Scene(grid, 80, 600);
+        scene = new Scene(root, 80, 600);
     }
 
     public Scene getScene() {
@@ -40,12 +48,12 @@ public class ConfirmScreen {
         cancelButton = new Button("Cancelar");
         confirmButton = new Button("Confirmar Aluguel");
 
-        cancelButton.setPrefWidth(70);
-        confirmButton.setPrefWidth(70);
+        cancelButton.setPrefWidth(100);
+        confirmButton.setPrefWidth(100);
 
-        grid.add(logoutButton, 0, 0);
-        grid.add(confirmButton, 0, 2);
-        grid.add(cancelButton, 0, 3);
+        root.getChildren().add(logoutButton);
+        root.getChildren().add(confirmButton);
+        root.getChildren().add(cancelButton);
 
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -62,7 +70,7 @@ public class ConfirmScreen {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CategorySelection category = new CategorySelection(); 
+                CategorySelection category = new CategorySelection();
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -77,12 +85,12 @@ public class ConfirmScreen {
             public void handle(ActionEvent event) {
                 SucessScreen sucess = new SucessScreen();
                 Window w = scene.getWindow();
-                if(w instanceof Stage) {
+                if (w instanceof Stage) {
                     Stage s = (Stage) w;
                     s.setScene(sucess.getScene());
-                } 
+                }
             }
-            
+
         });
     }
 }

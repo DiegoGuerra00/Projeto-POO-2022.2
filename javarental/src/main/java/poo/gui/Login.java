@@ -1,7 +1,5 @@
 package poo.gui;
 
-import java.io.InputStream;
-
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -41,7 +39,7 @@ public class Login {
         grid.setPadding(new Insets(10, 10, 10, 10));
         grid.add(title, 0, 1);
 
-        logo = new Image("file:javarental_logo.png", true);
+        logo = new Image("/javarental_logo.png", 300, 300, true, false);
         iv = new ImageView(logo);
         grid.add(iv, 0, 0);
 

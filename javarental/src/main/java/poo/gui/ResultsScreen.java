@@ -9,6 +9,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ public class ResultsScreen {
     private DatePicker inicioDatePicker;
     private DatePicker fimDatePicker;
     private Button confirmButton;
+    private Button cancelButton;
     private Carro carroSelecionado = null;
     private Motocicleta motoSelecionada = null;
     private List<Carro> carros;
@@ -47,7 +49,7 @@ public class ResultsScreen {
         getListViewItems(true);
         setListView(true);
         setDatePickers();
-        setConfirmButton(true);
+        setButtons(true);
 
         scene = new Scene(root, 800, 600);
     }
@@ -55,6 +57,9 @@ public class ResultsScreen {
     public ResultsScreen(List<Motocicleta> motos) {
         this.motos = motos;
         root = new HBox();
+        root.setAlignment(Pos.CENTER);
+        root.setSpacing(8);
+        root.setPadding(new Insets(8, 8, 8, 8));
 
         listView = new ListView<>();
         listViewItems = FXCollections.observableArrayList();
@@ -62,7 +67,7 @@ public class ResultsScreen {
         getListViewItems(false);
         setListView(false);
         setDatePickers();
-        setConfirmButton(false);
+        setButtons(false);
 
         scene = new Scene(root, 800, 600);
     }
@@ -87,6 +92,7 @@ public class ResultsScreen {
     private void setListView(boolean isCarro) {
         listView.setItems(listViewItems);
         listView.setPrefHeight(300);
+        listView.setMaxHeight(300);
 
         listView.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 
@@ -105,8 +111,21 @@ public class ResultsScreen {
         root.getChildren().add(listView);
     }
 
-    private void setConfirmButton(boolean isCarro) {
+    private void setButtons(boolean isCarro) {
         confirmButton = new Button("Confirmar");
+        cancelButton = new Button("Voltar");
+
+        confirmButton.setPrefWidth(100);
+        cancelButton.setPrefWidth(100);
+
+        confirmButton.setTranslateX(-110);
+        confirmButton.setTranslateY(-230);
+
+        cancelButton.setTranslateX(-320);
+        cancelButton.setTranslateY(-230);
+
+        root.getChildren().add(confirmButton);
+        root.getChildren().add(cancelButton);
 
         confirmButton.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -126,7 +145,7 @@ public class ResultsScreen {
     }
 
     private boolean checkSelection(boolean isCarro) {
-        if (fimDatePicker.getValue().isBefore(inicioDatePicker.getValue()) || fimDatePicker.getValue() == null) {
+        if (fimDatePicker.getValue() == null || fimDatePicker.getValue().isBefore(inicioDatePicker.getValue())) {
             return false;
         }
 

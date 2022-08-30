@@ -6,6 +6,8 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
@@ -19,6 +21,8 @@ public class CategorySelection {
     private Button carButton;
     private Button bikeButton;
     private Button logoutButton;
+    private Image logo;
+    private ImageView iv;
 
     public CategorySelection() {
         title = new Text("Deseja alugar um carro ou uma motocicleta?");
@@ -27,6 +31,11 @@ public class CategorySelection {
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(8, 8, 8, 8));
         root.setSpacing(5);
+
+        logo = new Image("/javarental_logo.png", 300, 300, true, false);
+        iv = new ImageView(logo);
+        root.getChildren().add(iv);
+
         root.getChildren().add(title);
 
         setButtons();
