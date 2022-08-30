@@ -1,31 +1,18 @@
 package poo.models;
 
-import java.util.Date;
-import java.util.List;
+import java.time.LocalDate;
 
-import org.hibernate.Session;
-
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.NoResultException;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Persistence;
-import jakarta.persistence.Query;
 import jakarta.persistence.SequenceGenerator;
+import poo.localdao.LocalDAO;
 import jakarta.persistence.GenerationType;
 
 @Entity
 @SequenceGenerator(name = "usuario_seq", sequenceName = "usuario_seq", allocationSize = 1, initialValue = 1)
 public class Usuario {
-    @Override
-    public String toString() {
-        return "Usuario [id=" + id + ", nome=" + nome + ", nomeUsuario=" + nomeUsuario + ", senha=" + senha + "]";
-    }
-
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "usuario_seq")
     private long id; // talvez remover e manter cpf como PK
@@ -34,71 +21,35 @@ public class Usuario {
     private String sobrenome;
     private String nomeUsuario;
     private String senha;
-    private int cpf;
+    private String cpf;
     private String email;
 
     public Usuario() {
     }
 
-    public void efetuarAluguel(List<Carro> listaCarros, List<Motocicleta> listaMotos, Usuario usuario, Date inicio,
-            Date fim) {
-        Aluguel aluguel = new Aluguel(listaCarros, listaMotos, usuario, inicio, fim);
+    public void efetuarAluguel(Carro carro, Motocicleta moto, Usuario usuario, LocalDate inicio,
+    LocalDate fim, EntityManager em) {
+        Aluguel aluguel = new Aluguel();
+        aluguel.setDataLocacao(inicio);
+        aluguel.setDataDevolucao(fim);
+        aluguel.setCarro(carro);
+        aluguel.setMoto(moto);
+        aluguel.setLocatario(usuario);
 
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-        EntityManager em = emf.createEntityManager();
+        long periodo_aluguel = aluguel.periodoAluguel(inicio, fim);
 
-        try{
-            em.getTransaction().begin();
-            em.persist(aluguel);
-            em.getTransaction().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //System.out.println("início: " + inicio);
+        //System.out.println("fim: " + fim);
+        //System.out.println("período total (em dias): " + periodo_aluguel);
+        //System.out.println("preço final: R$" + aluguel.precoFinal(carro, moto, periodo_aluguel));
 
-        em.close();
-        emf.close();
+        LocalDAO dao = new LocalDAO();
+        dao.salvarAluguel(aluguel,em);
     }
 
-    /**
-     * Retorna os alugueis correpondentes a um usuário, baseado no seu ID
-     * 
-     * @param userID ID do usuário a ser consultado
-     * @return Lista de Aluguel caso exista no DB, null caso não exista
-     */
-    public List<Aluguel> getUserAluguel(long userID) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-        EntityManager em = emf.createEntityManager();
-
-        try {
-            String queryText = "FROM Aluguel WHERE id = :userID";
-            Query query = em.createQuery(queryText);
-            query.setParameter("userID", userID);
-
-            return (List<Aluguel>) query.getResultList();
-        } catch (NoResultException e) {
-            return null;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        } finally {
-            em.close();
-        }
-    }
 
     // public void efetuarAluguel(Carro listaCarros, Motocicleta listaMotos, Usuario usuario, Date inicio, Date fim) {
     //     Aluguel aluguel = new Aluguel(listaCarros, usuario, inicio, fim);
-
-    //     EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-    //     EntityManager em = emf.createEntityManager();
-
-    //     try {
-    //         em.getTransaction().begin();
-    //         em.persist(aluguel);
-    //         em.getTransaction().commit();
-    //     } catch (Exception e) {
-    //         e.printStackTrace();
-    //     }
-    // }
 
     public void setId(long id) {
         this.id = id;
@@ -120,7 +71,7 @@ public class Usuario {
         this.senha = senha;
     }
 
-    public void setCpf(int cpf) {
+    public void setCpf(String cpf) {
         this.cpf = cpf;
     }
 
@@ -148,7 +99,7 @@ public class Usuario {
         return senha;
     }
 
-    public int getCpf() {
+    public String getCpf() {
         return cpf;
     }
 

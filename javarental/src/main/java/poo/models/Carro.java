@@ -20,10 +20,6 @@ public class Carro extends Veiculo {
     public Carro() {
     }
 
-    @Override
-    public void cadatroVeiculo() {
-    }
-
     public long getId() {
         return id;
     }

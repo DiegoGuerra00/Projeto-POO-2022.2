@@ -12,15 +12,27 @@ public class Motocicleta extends Veiculo {
     
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "moto_seq")
-    private long id; // talvez trocar por placa
+    private long id;
     private int cilindradas;
     private String tipoMoto;
 
     public Motocicleta() {
     }
 
-    @Override
-    public void cadatroVeiculo() {
+    public String getTipoMoto() {
+        return tipoMoto;
+    }
+
+    public void setTipoMoto(String tipoMoto) {
+        this.tipoMoto = tipoMoto;
+    }
+
+    public int getCilindradas() {
+        return cilindradas;
+    }
+
+    public void setCilindradas(int cilindradas) {
+        this.cilindradas = cilindradas;
     }
 
     public long getId() {

@@ -1,9 +1,7 @@
 package poo.models;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.time.Duration;
+import java.time.LocalDate;
 
 import jakarta.persistence.*;
 
@@ -12,36 +10,27 @@ import jakarta.persistence.*;
 public class Aluguel {
    @Id
    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "aluguel_seq")
-   private long id;
+   public long id;
 
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Carro.class)
-   @JoinColumn(name = "aluguel_id")
-   private List<Carro> listaCarros;
+   @OneToOne(cascade = CascadeType.ALL)
+   @JoinColumn(name = "carro_aluguel_id")
+   private Carro carro;
 
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, targetEntity = Motocicleta.class)
-   @JoinColumn(name = "aluguel_id")
-   private List<Motocicleta> listaMotos;
+   @OneToOne(cascade = CascadeType.ALL)
+   @JoinColumn(name = "moto_aluguel_id")
+   private Motocicleta moto;
 
-   // @OneToOne(cascade = CascadeType.ALL)
-   // private Carro carro;
    @ManyToOne(cascade = CascadeType.ALL) 
    @JoinColumn(name = "usuario_id")
    private Usuario locatario;
-   private Date dataLocacao;
-   private Date dataDevolucao;
+   private LocalDate dataLocacao;
+   private LocalDate dataDevolucao;
 
-   // public Aluguel(Carro carro, Usuario locatario, Date dataLocacao, Date dataDevolucao) {
-   //    this.carro = carro;
-   //    this.locatario = locatario;
-   //    this.dataLocacao = dataLocacao;
-   //    this.dataDevolucao = dataDevolucao;
-   // }
-
-   public Aluguel(List<Carro> listaCarros, List<Motocicleta> listaMotos, Usuario locatario, Date dataLocacao,
-         Date dataDevolucao) {
+   public Aluguel(Carro carro, Motocicleta moto, Usuario locatario, LocalDate dataLocacao,
+   LocalDate dataDevolucao) {
       this();
-      this.listaCarros = listaCarros;
-      this.listaMotos = listaMotos;
+      this.carro = carro;
+      this.moto = moto;
       this.locatario = locatario;
       this.dataLocacao = dataLocacao;
       this.dataDevolucao = dataDevolucao;
@@ -51,62 +40,76 @@ public class Aluguel {
    }
 
    /**
-    * Retorna o pedíodo total de um aluguel baseado nas datas de locação
+    * Retorna o período total de um aluguel baseado nas datas de locação
     * e devolução
     * 
     * @param inicio Data da locação, no formato Date
     * @param fim    Data da devolução, no formato Date
     * @return Período total, em dias
     */
-   public long periodoAluguel(Date inicio, Date fim) {
-      long inicioMS = inicio.getTime();
-      long fimMS = fim.getTime();
-      long periodoMS = fimMS - inicioMS;
-
-      return TimeUnit.MILLISECONDS.toDays(periodoMS);
+   public long periodoAluguel(LocalDate inicio, LocalDate fim) {
+      return (Duration.between(inicio.atStartOfDay(), fim.atStartOfDay()).toDays());
    }
 
-   // public double precoFinal() {
-   // double precoCarros = 0;
-   // double precoMotos = 0;
-   // for (Carro carro : listaCarros) {
-   // precoCarros += carro.precoDiario;
-   // }
-   // for (Motocicleta moto : listaMotos) {
-   // precoMotos += moto.precoDiario;
-   // }
+   public String precoFinal(Carro carro, Motocicleta moto, long periodo) {
+      double precoCarro = 0;
+      double precoMoto = 0;
 
-   // return (precoCarros + precoMotos) * periodoAluguel(dataLocacao,
-   // dataDevolucao);
-   // }
+      if (carro != null) {
+         precoCarro = carro.precoDiario;
+      }
+      else {
+         precoMoto = moto.precoDiario;
+      }
+
+      return (String.format("%.2f", (double)((precoCarro + precoMoto) * periodo)));
+    }
 
    public void setId(long id) {
       this.id = id;
    }
 
-   // public void setListaCarros(List<Carro> listaCarros) {
-   // this.listaCarros = listaCarros;
-   // }
+   public long getId() {
+      return id;
+  }
 
-   // public void setListaMotos(List<Motocicleta> listaMotos) {
-   // this.listaMotos = listaMotos;
-   // }
+   public void setCarro(Carro carro) {
+      this.carro = carro;
+   }
+
+   public Carro getCarro() {
+      return carro;
+   }
+
+   public void setMoto(Motocicleta moto) {
+      this.moto = moto;
+   }
+
+   public Motocicleta getMoto() {
+      return moto;
+   }
 
    public void setLocatario(Usuario locatario) {
       this.locatario = locatario;
    }
 
-   public void setDataLocacao(Date dataLocacao) {
+   public Usuario getLocatario() {
+      return locatario;
+  }
+
+   public void setDataLocacao(LocalDate dataLocacao) {
       this.dataLocacao = dataLocacao;
    }
 
-   public void setDataDevolucao(Date dataDevolucao) {
+   public LocalDate getDataLocacao() {
+      return dataLocacao;
+   }
+
+   public void setDataDevolucao(LocalDate dataDevolucao) {
       this.dataDevolucao = dataDevolucao;
    }
 
-   // @Override
-   // public String toString() {
-   //    return "Aluguel [carro=" + carro + ", dataDevolucao=" + dataDevolucao + ", dataLocacao=" + dataLocacao + ", id="
-   //          + id + ", locatario=" + locatario + "]";
-   // }
+   public LocalDate getDataDevolucao() {
+      return dataDevolucao;
+   }
 }
