@@ -12,6 +12,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -112,7 +113,7 @@ public class Login {
 
     private void setTextfields() {
         usernameTextField = new TextField();
-        passwdTextfield = new TextField();
+        passwdTextfield = new PasswordField();
 
         // usernameTextField.setPrefWidth(205);
         // passwdTextfield.setPrefWidth(205);
