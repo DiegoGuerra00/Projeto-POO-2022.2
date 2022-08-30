@@ -9,21 +9,21 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+import poo.gui.Login;
+import poo.localdao.LocalDAO;
+import poo.models.Auth;
 import poo.models.Carro;
 import poo.models.Motocicleta;
 import poo.models.Usuario;
 
-public class Main {
+public class Main extends Application {
     public static void main(String[] args) throws ParseException {
         // Criação dos mocks de usuario (sem persistência)
-        Usuario mock1= new Usuario();
-        mock1.setEmail("mock1@teste.com");
-        mock1.setNomeUsuario("mock_1");
-        mock1.setNome("mock1");
-        mock1.setSenha("teste");
-        mock1.setCpf("00000000000");
 
-        Usuario mock2= new Usuario();
+        Usuario mock2 = new Usuario();
         mock2.setEmail("mock2@teste.com");
         mock2.setNomeUsuario("mock_2");
         mock2.setNome("mock2");
@@ -43,25 +43,12 @@ public class Main {
         user1.setNome("name");
         user1.setSenha("pwd");
         user1.setCpf("321");
-        
-        // Criação do EMF passado como param
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
-        EntityManager em = emf.createEntityManager();
-    
-        // Criação dos mocks de carro (sem persistência)
-        Carro car = new Carro();
-        car.setModelo("Honda Civic");
-        car.setDisponivel(true);
-        car.setAno(2010);
-        car.setCor("azul");
-        car.setPrecoDiario(300.45);
 
-        Carro car1 = new Carro();
-        car1.setModelo("Honda Civic");
-        car1.setDisponivel(true);
-        car1.setAno(2005);
-        car1.setCor("vermelha");
-        car1.setPrecoDiario(150.45);
+        // Criação do EMF passado como param
+        // EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        // EntityManager em = emf.createEntityManager();
+
+        // Criação dos mocks de carro (sem persistência)
 
         Carro car2 = new Carro();
         car2.setAno(1111);
@@ -93,44 +80,93 @@ public class Main {
         moto3.setAno(0000);
         moto3.setCor("rosa");
         moto3.setPrecoDiario(184.32);
-        
-        // Criação dos mocks de datas (sem persistência)
-        LocalDate inicio = LocalDate.now();
-        LocalDate fim = LocalDate.of(2022, 9, 4);
 
-        // Teste 1: Persistência do Aluguel de um carro (car) com usuário 'user'
-        user.efetuarAluguel(car, null, user, inicio, fim, em);
+        // em.getTransaction().begin();
+        // em.persist(car1);
+        // em.persist(car);
+        // em.persist(mock1);
+        // em.getTransaction().commit();
 
-        // Teste 2: Persistência do Aluguel de um carro (car1) com usuário 'user'
-        user.efetuarAluguel(car1, null, user, inicio, fim, em);
-        
-        // Teste 3: Persistência do Aluguel de uma moto (moto) com usuário 'user'
-        user.efetuarAluguel(null, moto, user, inicio, fim, em);
-
-        // Teste 4: Persistência do Aluguel de uma moto (moto1) com usuário 'user'
-        user.efetuarAluguel(null, moto, user, inicio, fim, em);
-
-        // Teste de query de busca de resultados na tabela
-        String queryText = "FROM Carro WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND assentos = :assentos AND isDisponivel = true";
-            try {
-                Query query = em.createQuery(queryText);
-                query.setParameter("modelo", "Honda Civic");
-                query.setParameter("cor", "azul");
-                query.setParameter("ano", 2010);
-                query.setParameter("assentos", 4);
-
-                List<Carro> carro_result = (List<Carro>) query.getResultList();
-                System.out.println(carro_result.size());
-                System.out.println("modelo: " +carro_result.get(0).getCor());
-            } catch (NoResultException e) {
-
-            }
-        
         // Auth auth = new Auth();
         // auth.login("user_1", "senha");
         // auth.login("user_2", "outra_senha");
-    
-        em.close();
-        emf.close();
+
+        launch(args);
+
+        // em.close();
+        // emf.close();
+    }
+
+    private void populateDB(EntityManager em) {
+        Carro car = new Carro();
+        car.setModelo("Honda Civic");
+        car.setDisponivel(true);
+        car.setAno(2010);
+        car.setCor("Azul");
+        car.setPrecoDiario(300.45);
+        car.setDuasPortas(true);
+        car.setTipoCarro("Hatch");
+
+        Carro car1 = new Carro();
+        car1.setModelo("Honda Civic");
+        car1.setDisponivel(true);
+        car1.setAno(2005);
+        car1.setCor("Vermelha");
+        car1.setPrecoDiario(150.45);
+        car1.setDuasPortas(false);
+        car1.setTipoCarro("Sedan");
+
+        Carro car2 = new Carro();
+        car2.setModelo("BMW 328i");
+        car2.setDisponivel(true);
+        car2.setAno(2005);
+        car2.setCor("Preta");
+        car2.setPrecoDiario(490.45);
+        car2.setDuasPortas(false);
+        car2.setTipoCarro("Wagon");
+
+        Motocicleta moto = new Motocicleta();
+        moto.setModelo("Honda CG 160");
+        moto.setAno(2019);
+        moto.setCor("vermelha");
+        moto.setPrecoDiario(130.40);
+        moto.setCilindradas(160);
+        moto.setTipoMoto("Road");
+
+        Motocicleta moto1 = new Motocicleta();
+        moto1.setModelo("Honda PCX");
+        moto1.setAno(2020);
+        moto1.setCor("amarela");
+        moto1.setPrecoDiario(250.34);
+        moto1.setCilindradas(150);
+        moto1.setTipoMoto("Scooter");
+
+        Usuario mock1 = new Usuario();
+        mock1.setEmail("mock1@teste.com");
+        mock1.setNomeUsuario("mock_1");
+        mock1.setNome("mock1");
+        mock1.setSenha("teste");
+        mock1.setCpf("00000000000");
+
+        LocalDAO dao = new LocalDAO();
+        dao.salvarCarro(car, em);
+        dao.salvarCarro(car1, em);
+        dao.salvarMoto(moto, em);
+        dao.salvarMoto(moto1, em);
+        dao.salvarUsuario(mock1, em);
+    }
+
+    @Override
+    public void start(Stage primaryStage) throws Exception {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
+        EntityManager em = emf.createEntityManager();
+        Login login = new Login(em);
+        Scene scene = login.getScene();
+
+        // populateDB(em);
+
+        primaryStage.setTitle("JavaRental");
+        primaryStage.setScene(scene);
+        primaryStage.show();
     }
 }

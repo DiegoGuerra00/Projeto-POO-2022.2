@@ -1,5 +1,8 @@
 package poo.gui;
 
+import java.io.IOException;
+
+import jakarta.persistence.EntityManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -16,6 +19,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import poo.models.Auth;
 
 public class RegisterScreen {
     private GridPane grid;
@@ -31,8 +35,10 @@ public class RegisterScreen {
     private Button cancelButton;
     private Image logo;
     private ImageView iv;
+    private EntityManager em;
 
-    public RegisterScreen() {
+    public RegisterScreen(EntityManager em) {
+        this.em = em;
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(8);
@@ -94,8 +100,14 @@ public class RegisterScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                // TODO criar conta
-                Login login = new Login();
+                Auth auth = new Auth();
+                try {
+                    auth.cadastro(nomeTextField.getText(), sobrenomeTextField.getText(), usernameTextField.getText(), senhaTextField.getText(), cpfTextField.getText(), emailTextField.getText(), em);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                Login login = new Login(em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -109,7 +121,7 @@ public class RegisterScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                Login login = new Login();
+                Login login = new Login(em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;

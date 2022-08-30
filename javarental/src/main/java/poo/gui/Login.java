@@ -1,5 +1,10 @@
 package poo.gui;
 
+import java.io.IOException;
+
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
@@ -28,8 +33,10 @@ public class Login {
     private TextField passwdTextfield;
     private Image logo;
     private ImageView iv;
+    private EntityManager em;
 
-    public Login() {
+    public Login(EntityManager em) {
+        this.em = em;
         title = new Text("Bem Vindo");
 
         grid = new GridPane();
@@ -67,7 +74,7 @@ public class Login {
 
             @Override
             public void handle(ActionEvent event) {
-                RegisterScreen register = new RegisterScreen();
+                RegisterScreen register = new RegisterScreen(em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -81,21 +88,23 @@ public class Login {
             @Override
             public void handle(ActionEvent event) {
                 Auth auth = new Auth();
-                // auth.login(userTextfield.getText(), passwdTextfield.getText());
-                // Usuario tmp = auth.login(usernameTextField.getText(),
-                // passwdTextfield.getText());
-                // if (tmp != null) {
-                // MainMenu menu = new MainMenu();
-                // SearchScreen search = new SearchScreen();
-                CategorySelection category = new CategorySelection(new Usuario());
-                Window w = scene.getWindow();
-                if (w instanceof Stage) {
-                    Stage s = (Stage) w;
-                    s.setScene(category.getScene());
+                Usuario tmp = new Usuario();
+                try {
+                    System.out.println("Login Iniciado!!");
+                    tmp = auth.login(usernameTextField.getText(),
+                            passwdTextfield.getText());
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                // } else {
-                // // TODO show error screen
-                // }
+                if (tmp != null) {
+                    CategorySelection category = new CategorySelection(tmp, em);
+                    Window w = scene.getWindow();
+                    if (w instanceof Stage) {
+                        Stage s = (Stage) w;
+                        s.setScene(category.getScene());
+                    }
+                } else {
+                }
 
             }
         });

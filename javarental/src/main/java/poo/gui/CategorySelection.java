@@ -1,5 +1,6 @@
 package poo.gui;
 
+import jakarta.persistence.EntityManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -25,9 +26,11 @@ public class CategorySelection {
     private Image logo;
     private ImageView iv;
     private Usuario user;
+    private EntityManager em;
 
-    public CategorySelection(Usuario user) {
+    public CategorySelection(Usuario user, EntityManager em) {
         this.user = user;
+        this.em = em;
         title = new Text("Deseja alugar um carro ou uma moto?");
         title.setFont(new Font("Times New Roman", 16));
         root = new VBox();
@@ -68,7 +71,7 @@ public class CategorySelection {
         carButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchScreen search = new SearchScreen(true, user);
+                SearchScreen search = new SearchScreen(true, user, em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -80,7 +83,7 @@ public class CategorySelection {
         bikeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                SearchScreen search = new SearchScreen(false, user);
+                SearchScreen search = new SearchScreen(false, user, em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -92,7 +95,7 @@ public class CategorySelection {
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Login login = new Login();
+                Login login = new Login(em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;

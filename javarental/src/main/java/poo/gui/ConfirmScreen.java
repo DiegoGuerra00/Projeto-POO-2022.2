@@ -2,6 +2,7 @@ package poo.gui;
 
 import java.time.LocalDate;
 
+import jakarta.persistence.EntityManager;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -10,10 +11,10 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import poo.models.Aluguel;
 import poo.models.Carro;
 import poo.models.Motocicleta;
 import poo.models.Usuario;
@@ -32,12 +33,14 @@ public class ConfirmScreen {
     private Motocicleta moto;
     private LocalDate inicio;
     private LocalDate fim;
+    private EntityManager em;
 
-    public ConfirmScreen(Carro carro, LocalDate inicio, LocalDate fim, Usuario user) {
+    public ConfirmScreen(Carro carro, LocalDate inicio, LocalDate fim, Usuario user, EntityManager em) {
         this.user = user;
         this.carro = carro;
         this.inicio = inicio;
         this.fim = fim;
+        this.em = em;
         root = new HBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(8);
@@ -46,11 +49,17 @@ public class ConfirmScreen {
         iv = new ImageView(logo);
         root.getChildren().add(iv);
 
-        // TODO set price
+        System.out.println(carro.toString());
+        System.out.println(inicio);
+        System.out.println(fim);
+
+        Aluguel al = new Aluguel();
+        priceLabel = new Label();
+        priceLabel.setText(al.precoFinal(carro, moto, al.periodoAluguel(inicio, fim)));
         root.getChildren().add(priceLabel);
         setButtons();
 
-        scene = new Scene(root, 80, 600);
+        scene = new Scene(root, 800, 600);
     }
 
     public ConfirmScreen(Motocicleta moto, LocalDate inicio, LocalDate fim, Usuario user) {
@@ -66,7 +75,8 @@ public class ConfirmScreen {
         iv = new ImageView(logo);
         root.getChildren().add(iv);
 
-        // TODO set price
+        Aluguel al = new Aluguel();
+        priceLabel.setText("Preço Total: R$" + al.precoFinal(carro, moto, al.periodoAluguel(inicio, fim)));
         root.getChildren().add(priceLabel);
         setButtons();
 
@@ -80,19 +90,19 @@ public class ConfirmScreen {
     private void setButtons() {
         logoutButton = new Button("Logout");
         cancelButton = new Button("Cancelar");
-        confirmButton = new Button("Confirmar Aluguel");
+        confirmButton = new Button("Confirmar");
 
         cancelButton.setPrefWidth(100);
         confirmButton.setPrefWidth(100);
 
-        root.getChildren().add(logoutButton);
+        // root.getChildren().add(logoutButton);
         root.getChildren().add(confirmButton);
         root.getChildren().add(cancelButton);
 
         logoutButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Login login = new Login();
+                Login login = new Login(em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -104,7 +114,7 @@ public class ConfirmScreen {
         cancelButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CategorySelection category = new CategorySelection(user);
+                CategorySelection category = new CategorySelection(user, em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -117,7 +127,11 @@ public class ConfirmScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                SucessScreen sucess = new SucessScreen(user);
+                carro.setDisponivel(false);
+                moto.setDisponivel(false);
+                user.efetuarAluguel(carro, moto, user, inicio, fim, em);
+
+                SucessScreen sucess = new SucessScreen(user, em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;

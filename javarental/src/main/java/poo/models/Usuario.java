@@ -107,4 +107,10 @@ public class Usuario {
         return email;
     }
 
+    @Override
+    public String toString() {
+        return "Usuario [cpf=" + cpf + ", email=" + email + ", id=" + id + ", nome=" + nome + ", nomeUsuario="
+                + nomeUsuario + ", senha=" + senha + ", sobrenome=" + sobrenome + "]";
+    }
+
 }

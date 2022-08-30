@@ -3,6 +3,7 @@ package poo.gui;
 import java.time.LocalDate;
 import java.util.List;
 
+import jakarta.persistence.EntityManager;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,11 +16,9 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import poo.models.Carro;
@@ -41,24 +40,20 @@ public class ResultsScreen {
     private ObservableList<String> listViewItems;
     private Usuario user;
     private Separator sep;
-    // private Label hint;
+    private EntityManager em;
 
     // FIXME parametro carro é gambiarra para diferenciar os construtores(devido ao
     // type erasure do Java)
-    public ResultsScreen(List<Carro> carros, Carro carro, Usuario user) {
+    public ResultsScreen(List<Carro> carros, Carro carro, Usuario user, EntityManager em) {
         this.carros = carros;
         this.user = user;
+        this.em = em;
         root = new HBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(8);
 
         listView = new ListView<>();
         listViewItems = FXCollections.observableArrayList();
-
-        // hint = new Label("Selecione o carro desejado");
-        // // hint.setPrefWidth(800);
-        // hint.setTranslateX(200);
-        // hint.setTranslateY(-200);
 
         getListViewItems(true);
         setDatePickers();
@@ -74,9 +69,10 @@ public class ResultsScreen {
         scene = new Scene(root, 800, 600);
     }
 
-    public ResultsScreen(List<Motocicleta> motos, Usuario user) {
+    public ResultsScreen(List<Motocicleta> motos, Usuario user, EntityManager em) {
         this.user = user;
         this.motos = motos;
+        this.em = em;
         root = new HBox();
         root.setAlignment(Pos.CENTER);
         root.setSpacing(8);
@@ -84,8 +80,6 @@ public class ResultsScreen {
 
         listView = new ListView<>();
         listViewItems = FXCollections.observableArrayList();
-
-        // hint = new Label("Selecione o moto desejada");
 
         getListViewItems(false);
         setDatePickers();
@@ -103,6 +97,7 @@ public class ResultsScreen {
 
     private void getListViewItems(boolean isCarro) {
         if (isCarro) {
+            System.out.println(carros.size());
             for (Carro carro : carros) {
                 StringBuilder str = new StringBuilder();
                 str.append(carro.getModelo() + " | " + carro.getPrecoDiario());
@@ -163,9 +158,11 @@ public class ResultsScreen {
                 if (checkSelection(isCarro)) {
                     ConfirmScreen confirmScreen;
                     if (isCarro) {
-                        confirmScreen = new ConfirmScreen(carroSelecionado, inicioDatePicker.getValue(), fimDatePicker.getValue(), user);
+                        confirmScreen = new ConfirmScreen(carroSelecionado, inicioDatePicker.getValue(),
+                                fimDatePicker.getValue(), user, em);
                     } else {
-                        confirmScreen = new ConfirmScreen(motoSelecionada, inicioDatePicker.getValue(), fimDatePicker.getValue(), user);
+                        confirmScreen = new ConfirmScreen(motoSelecionada, inicioDatePicker.getValue(),
+                                fimDatePicker.getValue(), user);
                     }
                     Window w = scene.getWindow();
                     if (w instanceof Stage) {
@@ -181,8 +178,14 @@ public class ResultsScreen {
 
             @Override
             public void handle(ActionEvent event) {
+                CategorySelection categorySelection = new CategorySelection(user, em);
+                Window w = scene.getWindow();
+                if(w instanceof Stage) {
+                    Stage s = (Stage) w;
+                    s.setScene(categorySelection.getScene());
+                }
             }
-            
+
         });
     }
 

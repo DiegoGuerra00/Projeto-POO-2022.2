@@ -1,5 +1,7 @@
 package poo.localdao;
 
+import org.hibernate.Session;
+
 //import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -14,7 +16,7 @@ public class LocalDAO {
     public void salvarAluguel(Aluguel aluguel, EntityManager em){
         try{
             em.getTransaction().begin();
-            em.persist(aluguel);
+            em.unwrap(Session.class).saveOrUpdate(aluguel);
             em.getTransaction().commit();
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,8 +1,5 @@
 package poo.gui;
 
-import javafx.beans.value.ObservableValue;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.EntityManager;
@@ -10,9 +7,7 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.NoResultException;
 import jakarta.persistence.Persistence;
 import jakarta.persistence.Query;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -23,7 +18,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import poo.models.Carro;
@@ -36,41 +30,29 @@ public class SearchScreen {
     private Scene scene;
     private Button logoutButton;
     private Button searchButton;
-    private Image logo;
-    private ImageView iv;
     private Usuario user;
 
-    private ChoiceBox<String> marcaBox;
-    private ChoiceBox<String> modeloBox;
+    private ChoiceBox<String> modeloCarroBox;
+    private ChoiceBox<String> modeloMotoBox;
     private ChoiceBox<String> anoBox;
     private ChoiceBox<String> corBox;
-    private ChoiceBox<String> assentosBox;
-    private ChoiceBox<String> categoriaBox;
     private ChoiceBox<String> tipoCarroBox; // Usado apenas quando a categoria é carro
-    private ChoiceBox<String> tipoMotoBox;//Usado apenas quando é moto
+    private ChoiceBox<String> tipoMotoBox;// Usado apenas quando é moto
     private ChoiceBox<String> portasBox; // Usado apenas quando a categoria é carro
-    private ChoiceBox<String> cilindradasBox; //Usado apenas quando é moto
+    private ChoiceBox<String> cilindradasBox; // Usado apenas quando é moto
 
-    private String marca;
-    private String modelo;
-    private String ano;
-    private String cor;
-    private String assentos;
-    private String categoria;
     private boolean isCarro;
+    private EntityManager em;
 
-    public SearchScreen(boolean isCarro, Usuario user) {
+    public SearchScreen(boolean isCarro, Usuario user, EntityManager em) {
         this.user = user;
         this.isCarro = isCarro;
+        this.em = em;
         grid = new GridPane();
         grid.setHgap(5);
         grid.setVgap(8);
         grid.setPadding(new Insets(8, 8, 8, 8));
         grid.setAlignment(Pos.CENTER);
-
-        logo = new Image("/javarental_logo.png", 300, 300, true, false);
-        iv = new ImageView(logo);
-        // grid.add(iv, 1, 0);
 
         setButtons();
         setChoiceBoxes();
@@ -83,7 +65,7 @@ public class SearchScreen {
     }
 
     private void setChoiceBoxes() {
-        tipoMotoBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
+        tipoMotoBox = new ChoiceBox<String>(FXCollections.observableArrayList("Scooter", "Mobilete", "Road"));
         tipoMotoBox.setValue("Tipo");
         tipoMotoBox.setPrefWidth(WIDTH);
         grid.add(tipoMotoBox, 1, 1);
@@ -93,12 +75,19 @@ public class SearchScreen {
         tipoCarroBox.setPrefWidth(WIDTH);
         grid.add(tipoCarroBox, 1, 1);
 
-        modeloBox = new ChoiceBox<String>(FXCollections.observableArrayList("Honda", "BMW", "Nissan"));
-        modeloBox.setValue("Modelo");
-        modeloBox.setPrefWidth(WIDTH);
-        grid.add(modeloBox, 2, 1);
+        modeloCarroBox = new ChoiceBox<String>(
+                FXCollections.observableArrayList("Honda Civic", "BMW 238i", "Nissan 180SX"));
+        modeloCarroBox.setValue("Modelo");
+        modeloCarroBox.setPrefWidth(WIDTH);
+        grid.add(modeloCarroBox, 2, 1);
 
-        anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("1999", "1998", "1995"));
+        modeloMotoBox = new ChoiceBox<String>(
+                FXCollections.observableArrayList("Honda CG 160", "Honda PCX"));
+        modeloMotoBox.setValue("Modelo");
+        modeloMotoBox.setPrefWidth(WIDTH);
+        grid.add(modeloMotoBox, 2, 1);
+
+        anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("1999", "1998", "1995", "2010", "2008"));
         anoBox.setValue("Ano");
         anoBox.setPrefWidth(WIDTH);
         grid.add(anoBox, 4, 1);
@@ -109,12 +98,12 @@ public class SearchScreen {
         grid.add(corBox, 1, 2);
 
         portasBox = new ChoiceBox<String>(FXCollections.observableArrayList("2", "4"));
-        portasBox.setValue("Portas"); 
+        portasBox.setValue("Portas");
         portasBox.setPrefWidth(WIDTH);
         grid.add(portasBox, 2, 2);
 
-        cilindradasBox = new ChoiceBox<String>(FXCollections.observableArrayList("100", "150", "200"));
-        cilindradasBox.setValue("Cilindradas"); 
+        cilindradasBox = new ChoiceBox<String>(FXCollections.observableArrayList("100", "150", "160", "200"));
+        cilindradasBox.setValue("Cilindradas");
         cilindradasBox.setPrefWidth(WIDTH);
         grid.add(cilindradasBox, 2, 2);
 
@@ -123,11 +112,15 @@ public class SearchScreen {
             tipoCarroBox.setVisible(true);
             tipoMotoBox.setVisible(false);
             cilindradasBox.setVisible(false);
+            modeloCarroBox.setVisible(true);
+            modeloMotoBox.setVisible(false);
         } else {
             portasBox.setVisible(false);
             tipoCarroBox.setVisible(false);
             tipoMotoBox.setVisible(true);
             cilindradasBox.setVisible(true);
+            modeloCarroBox.setVisible(false);
+            modeloMotoBox.setVisible(true);
         }
 
     }
@@ -143,7 +136,7 @@ public class SearchScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                Login login = new Login();
+                Login login = new Login(em);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
@@ -164,9 +157,22 @@ public class SearchScreen {
             public void handle(ActionEvent event) {
                 ResultsScreen results;
                 if (isCarro) {
-                    results = new ResultsScreen(new ArrayList<>(), new Carro(), user); // TODO executeQuery aqui
+                    boolean portas;
+                    if (portasBox.getValue().matches("2")) {
+                        portas = true;
+                    } else {
+                        portas = false;
+                    }
+                    List<Carro> carros = executeQuery(modeloCarroBox.getValue(), tipoCarroBox.getValue(),
+                            Integer.parseInt(anoBox.getValue()), corBox.getValue(), portas);
+
+                    results = new ResultsScreen(carros, new Carro(), user, em);
+
                 } else {
-                    results = new ResultsScreen(new ArrayList<>(), user);
+                    List<Motocicleta> motos = executeQuery(modeloCarroBox.getValue(), tipoMotoBox.getValue(),
+                            Integer.parseInt(anoBox.getValue()), corBox.getValue(),
+                            Integer.parseInt(cilindradasBox.getValue()));
+                    results = new ResultsScreen(motos, user, em);
                 }
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
@@ -178,44 +184,42 @@ public class SearchScreen {
         });
     }
 
-    public List executeQuery(String marca, String modelo, String ano, String cor, String assentos, String categoria) {
+    public List executeQuery(String modelo, String tipo, int ano, String cor, boolean portas) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
 
-        String queryText = "FROM carro WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND assentos = :assentos AND isdisponivel = true";
+        String queryText = "FROM Carro WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND isDisponivel = true AND isDuasPortas = :portas";
         try {
             Query query = em.createQuery(queryText);
-            query.setParameter(modelo, modelo);
-            query.setParameter(cor, cor);
-            query.setParameter(ano, ano);
-            query.setParameter(marca, marca);
-            query.setParameter(assentos, assentos);
+            query.setParameter("modelo", modelo);
+            query.setParameter("cor", cor);
+            query.setParameter("ano", ano);
+            query.setParameter("portas", portas);
 
-            List<Carro> carros = (List<Carro>) query.getResultList();
-
-            return carros;
+            return (List<Carro>) query.getResultList();
         } catch (NoResultException e) {
+            System.out.println("No Result Found!");
             return null;
         }
 
     }
 
-    public List executeQuery(String marca, String modelo, String ano, String cor, String categoria) {
+    public List executeQuery(String modelo, String tipo, int ano, String cor, int cilindradas) {
         EntityManagerFactory emf = Persistence.createEntityManagerFactory("default");
         EntityManager em = emf.createEntityManager();
 
-        String queryText = "FROM motocicleta WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND marca = :marca AND isdisponivel = true";
+        String queryText = "FROM motocicleta WHERE modelo = :modelo AND cor = :cor AND ano = :ano AND cilindradas = :cilindradas AND isdisponivel = true";
         try {
             Query query = em.createQuery(queryText);
-            query.setParameter(modelo, modelo);
-            query.setParameter(cor, cor);
-            query.setParameter(ano, ano);
-            query.setParameter(marca, marca);
+            query.setParameter("modelo", modelo);
+            query.setParameter("cor", cor);
+            query.setParameter("ano", ano);
+            query.setParameter("cilindradas", cilindradas);
 
-            List<Motocicleta> motos = (List<Motocicleta>) query.getResultList();
+            return (List<Motocicleta>) query.getResultList();
 
-            return motos;
         } catch (NoResultException e) {
+            System.out.println("No Result Found!");
             return null;
         }
     }
