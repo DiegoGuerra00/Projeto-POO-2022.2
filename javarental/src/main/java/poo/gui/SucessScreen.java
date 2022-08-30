@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import poo.models.Usuario;
 
 public class SucessScreen {
     private GridPane grid;
@@ -16,8 +17,10 @@ public class SucessScreen {
     private Button returnButton;
     private Button newRentalButton;
     private Label msgLabel;
+    private Usuario user;
 
-    public SucessScreen() {
+    public SucessScreen(Usuario user) {
+        this.user = user;
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
 
@@ -54,7 +57,7 @@ public class SucessScreen {
         newRentalButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                CategorySelection categorySel = new CategorySelection();
+                CategorySelection categorySel = new CategorySelection(user);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;

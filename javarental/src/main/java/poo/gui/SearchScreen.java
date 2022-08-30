@@ -83,16 +83,11 @@ public class SearchScreen {
     }
 
     private void setChoiceBoxes() {
-        tipoCarroBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
-        tipoCarroBox.setValue("Tipo");
-        tipoCarroBox.setPrefWidth(WIDTH);
-
         tipoMotoBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
         tipoMotoBox.setValue("Tipo");
         tipoMotoBox.setPrefWidth(WIDTH);
         grid.add(tipoMotoBox, 1, 1);
 
-        grid.add(tipoCarroBox, 1, 1);
         tipoCarroBox = new ChoiceBox<String>(FXCollections.observableArrayList("Sedan", "Wagon", "Hatch"));
         tipoCarroBox.setValue("Tipo");
         tipoCarroBox.setPrefWidth(WIDTH);
@@ -102,7 +97,6 @@ public class SearchScreen {
         modeloBox.setValue("Modelo");
         modeloBox.setPrefWidth(WIDTH);
         grid.add(modeloBox, 2, 1);
-
 
         anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("1999", "1998", "1995"));
         anoBox.setValue("Ano");
@@ -114,20 +108,15 @@ public class SearchScreen {
         corBox.setPrefWidth(WIDTH);
         grid.add(corBox, 1, 2);
 
-        assentosBox = new ChoiceBox<String>(FXCollections.observableArrayList("4", "5"));
-        assentosBox.setValue("Assentos"); 
-        assentosBox.setPrefWidth(WIDTH);
-        grid.add(assentosBox, 2, 2);
-
         portasBox = new ChoiceBox<String>(FXCollections.observableArrayList("2", "4"));
         portasBox.setValue("Portas"); 
         portasBox.setPrefWidth(WIDTH);
-        grid.add(portasBox, 3, 1);
+        grid.add(portasBox, 2, 2);
 
         cilindradasBox = new ChoiceBox<String>(FXCollections.observableArrayList("100", "150", "200"));
         cilindradasBox.setValue("Cilindradas"); 
         cilindradasBox.setPrefWidth(WIDTH);
-        grid.add(cilindradasBox, 3, 1);
+        grid.add(cilindradasBox, 2, 2);
 
         if (isCarro) {
             portasBox.setVisible(true);

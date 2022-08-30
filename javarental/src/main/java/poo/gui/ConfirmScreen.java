@@ -117,7 +117,7 @@ public class ConfirmScreen {
 
             @Override
             public void handle(ActionEvent event) {
-                SucessScreen sucess = new SucessScreen();
+                SucessScreen sucess = new SucessScreen(user);
                 Window w = scene.getWindow();
                 if (w instanceof Stage) {
                     Stage s = (Stage) w;
