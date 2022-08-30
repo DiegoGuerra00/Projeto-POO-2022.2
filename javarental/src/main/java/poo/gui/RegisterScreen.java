@@ -9,6 +9,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.text.Font;
@@ -27,17 +29,23 @@ public class RegisterScreen {
     private TextField emailTextField;
     private Button registerButton;
     private Button cancelButton;
+    private Image logo;
+    private ImageView iv;
 
     public RegisterScreen() {
         grid = new GridPane();
         grid.setAlignment(Pos.CENTER);
         grid.setHgap(8);
         grid.setVgap(8);
-        grid.setPadding(new Insets(8, 8, 8, 8));
+        grid.setPadding(new Insets(8, 8,8, 8));
+
+        logo = new Image("/javarental_logo.png", 300, 300, true, false);
+        iv = new ImageView(logo);
+        grid.add(iv, 0, 0);
 
         title = new Label("Criar Conta");
         title.setFont(new Font("TIme New Roman", 20));
-        grid.add(title, 0, 0);
+        grid.add(title, 0, 1);
 
         setTextFields();
         setButtons();
@@ -64,12 +72,12 @@ public class RegisterScreen {
         cpfTextField.setPromptText("CPF");
         emailTextField.setPromptText("e-mail");
 
-        grid.add(nomeTextField, 0, 1);
-        grid.add(sobrenomeTextField, 0, 2);
-        grid.add(cpfTextField, 0, 3);
-        grid.add(emailTextField, 0, 4);
-        grid.add(usernameTextField, 0, 5);
-        grid.add(senhaTextField, 0, 6);
+        grid.add(nomeTextField, 0, 2);
+        grid.add(sobrenomeTextField, 0, 3);
+        grid.add(cpfTextField, 0, 4);
+        grid.add(emailTextField, 0, 5);
+        grid.add(usernameTextField, 0, 6);
+        grid.add(senhaTextField, 0, 7);
     }
 
     private void setButtons() {
@@ -79,7 +87,7 @@ public class RegisterScreen {
         cancelButton.setTranslateX(330);
         cancelButton.setTranslateY(-130);
 
-        grid.add(registerButton, 0, 7);
+        grid.add(registerButton, 0, 8);
         grid.add(cancelButton, 0, 0);
 
         registerButton.setOnAction(new EventHandler<ActionEvent>() {
