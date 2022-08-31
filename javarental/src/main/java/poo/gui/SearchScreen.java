@@ -87,7 +87,7 @@ public class SearchScreen {
         modeloMotoBox.setPrefWidth(WIDTH);
         grid.add(modeloMotoBox, 2, 1);
 
-        anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("1999", "1998", "1995", "2010", "2008"));
+        anoBox = new ChoiceBox<String>(FXCollections.observableArrayList("2010", "2015", "2019", "2020", "2022"));
         anoBox.setValue("Ano");
         anoBox.setPrefWidth(WIDTH);
         grid.add(anoBox, 4, 1);

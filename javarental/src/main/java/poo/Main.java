@@ -128,18 +128,20 @@ public class Main extends Application {
         Motocicleta moto = new Motocicleta();
         moto.setModelo("Honda CG 160");
         moto.setAno(2019);
-        moto.setCor("vermelha");
+        moto.setCor("Vermelho");
         moto.setPrecoDiario(130.40);
         moto.setCilindradas(160);
         moto.setTipoMoto("Road");
+        moto.setDisponivel(true);
 
         Motocicleta moto1 = new Motocicleta();
         moto1.setModelo("Honda PCX");
         moto1.setAno(2020);
-        moto1.setCor("amarela");
+        moto1.setCor("Amarelo");
         moto1.setPrecoDiario(250.34);
         moto1.setCilindradas(150);
         moto1.setTipoMoto("Scooter");
+        moto1.setDisponivel(true);
 
         Usuario mock1 = new Usuario();
         mock1.setEmail("mock1@teste.com");

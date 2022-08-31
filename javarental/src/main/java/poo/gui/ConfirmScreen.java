@@ -76,6 +76,8 @@ public class ConfirmScreen {
         root.getChildren().add(iv);
 
         Aluguel al = new Aluguel();
+        Label label = new Label("Preço Total: R$");
+        root.getChildren().add(label);
         priceLabel.setText("Preço Total: R$" + al.precoFinal(carro, moto, al.periodoAluguel(inicio, fim)));
         root.getChildren().add(priceLabel);
         setButtons();
